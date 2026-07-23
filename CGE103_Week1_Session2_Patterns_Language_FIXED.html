@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- skill:chassis -->
+<style>
+/* =====================================================
+   PRESENTATION CHASSIS — style-invariant base styles
+   Fixed 1920×1080 canvas scaled to fit any viewport.
+   Customize colors, fonts, and chrome via :root tokens.
+   ===================================================== */
+
+/* ---------- Universal reset ---------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ---------- Theme tokens (override in your deck's CSS) ---------- */
+:root {
+    color-scheme: light;
+
+    --background:      #ffffff;
+    --foreground:      #111111;
+    --card:            #f5f5f5;
+    --card-foreground: var(--foreground);
+    --accent:          #c94a3d;
+    --accent-foreground: #ffffff;
+
+    --muted-foreground: color-mix(in srgb, var(--foreground) 55%, transparent);
+    --border:           color-mix(in srgb, var(--foreground) 12%, transparent);
+
+    --font-display: Georgia, serif;
+    --font-body: -apple-system, system-ui, sans-serif;
+    --font-mono: ui-monospace, monospace;
+
+    /* Reveal animation */
+    --reveal-duration: 0.8s;
+    --reveal-ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    --reveal-distance: 28px;
+
+    /* Chrome (nav dots, keyboard hint) */
+    --nav-dot-size: 9px;
+    --nav-dot-radius: 50%;
+    --nav-dot-color: var(--foreground);
+    --nav-dot-active-color: var(--accent);
+    --nav-dot-opacity: 0.4;
+}
+
+/* ---------- Viewport lock + scroll snap ---------- */
+html, body { height: 100%; overflow-x: hidden; }
+html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+
+html, body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+/* ---------- Type scale ----------
+   Fixed px sizes on a 1920×1080 canvas. The canvas is scaled to fit
+   any viewport via transform, so these sizes are absolute within the
+   design surface — no responsive units needed. */
+body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body);
+    font-size: 36px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1 { font-size: 120px; line-height: 1.05; letter-spacing: -0.02em; }
+h2 { font-size: 64px; line-height: 1.1; letter-spacing: -0.01em; }
+h3 { font-size: 44px; line-height: 1.2; }
+.eyebrow {
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.3;
+}
+
+ul, ol { padding-left: 48px; display: flex; flex-direction: column; gap: 24px; }
+li::marker { color: var(--accent); }
+
+/* ---------- Slide structure ----------
+   .slide is the authored 1920×1080 artboard.
+   The chassis wraps it in viewport + scale layers at runtime. */
+.slide-viewport {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: block;
+    position: relative;
+    background: var(--background);
+    isolation: isolate;
+    z-index: 1;
+}
+
+.slide-scale {
+    width: 1920px;
+    height: 1080px;
+    transform: translate(-50%, -50%) scale(var(--slide-scale, 1));
+    transform-origin: center center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+}
+
+.slide {
+    width: 1920px;
+    height: 1080px;
+    padding: 80px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 60px;
+    position: relative;
+    background: transparent;
+}
+
+
+/* ---------- Image defaults ---------- */
+img, .image-container {
+    max-width: 100%;
+    max-height: 540px;
+    object-fit: contain;
+}
+
+/* ---------- Reveal primitives ----------
+   Driven by chassis.js via the Web Animations API, not CSS transitions.
+   Put .reveal* or .step on ANY element — author CSS on the same element
+   (opacity, transform, transition, filter) never conflicts, because
+   WAAPI animations live in the animation cascade origin and win over
+   normal author declarations. The .dN stagger classes below still apply
+   to theme-authored CSS animations via animation-delay.
+
+   Variants: .reveal (fade + up), .reveal-left, .reveal-right,
+   .reveal-scale, .reveal-blur. .step stays hidden until the user
+   advances forward. Don't combine .step with .reveal* on the same
+   element. */
+
+/* FOUC guard: hide reveals until chassis.js marks the document ready. */
+:root:not(.reveals-ready) .reveal,
+:root:not(.reveals-ready) .reveal-left,
+:root:not(.reveals-ready) .reveal-right,
+:root:not(.reveals-ready) .reveal-scale,
+:root:not(.reveals-ready) .reveal-blur,
+:root:not(.reveals-ready) .step {
+    opacity: 0;
+}
+:root:not(.reveals-ready) .reveal-blur { filter: blur(10px); }
+
+/* ---------- Stagger delays (.d1 … .d8) ---------- */
+.slide.visible .d1 { transition-delay: 0.10s; animation-delay: 0.10s; }
+.slide.visible .d2 { transition-delay: 0.25s; animation-delay: 0.25s; }
+.slide.visible .d3 { transition-delay: 0.40s; animation-delay: 0.40s; }
+.slide.visible .d4 { transition-delay: 0.55s; animation-delay: 0.55s; }
+.slide.visible .d5 { transition-delay: 0.70s; animation-delay: 0.70s; }
+.slide.visible .d6 { transition-delay: 0.85s; animation-delay: 0.85s; }
+.slide.visible .d7 { transition-delay: 1.00s; animation-delay: 1.00s; }
+.slide.visible .d8 { transition-delay: 1.15s; animation-delay: 1.15s; }
+
+/* ---------- Nav dots ----------
+   Default: right-center (vertical stack on right edge).
+   Override with <body data-nav="bottom | top-right | hidden">. */
+.nav-dots {
+    position: fixed;
+    right: clamp(0.6rem, 1.5vw, 1.4rem);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vh, 0.8rem);
+    z-index: 50;
+}
+
+body[data-nav="bottom"] .nav-dots {
+    right: auto;
+    top: auto;
+    bottom: clamp(1rem, 2.5vh, 2rem);
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+}
+
+body[data-nav="top-right"] .nav-dots {
+    right: clamp(1rem, 2.5vw, 2rem);
+    top: clamp(1rem, 2.5vh, 2rem);
+    transform: none;
+    flex-direction: row;
+}
+
+body[data-nav="hidden"] .nav-dots { display: none; }
+
+body[data-nav="bottom"] .keyboard-hint {
+    left: clamp(1rem, 2vw, 1.5rem);
+    transform: none;
+}
+
+.nav-dots button {
+    width: var(--nav-dot-size);
+    height: var(--nav-dot-size);
+    border-radius: var(--nav-dot-radius);
+    border: 1.5px solid var(--nav-dot-color);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+    opacity: var(--nav-dot-opacity);
+}
+.nav-dots button:hover { opacity: 0.85; transform: scale(1.15); }
+.nav-dots button:focus-visible {
+    outline: 2px solid var(--nav-dot-active-color);
+    outline-offset: 3px;
+    opacity: 1;
+}
+.nav-dots button.active {
+    background: var(--nav-dot-active-color);
+    border-color: var(--nav-dot-active-color);
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* ---------- Keyboard hint ---------- */
+.keyboard-hint {
+    position: fixed;
+    bottom: clamp(0.6rem, 1.2vh, 1rem);
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--muted-foreground);
+    z-index: 50;
+    opacity: 0.7;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+.keyboard-hint kbd {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.9em;
+    padding: 0.05em 0.4em;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--background);
+    margin: 0 0.15em;
+}
+
+/* ---------- Credit line ---------- */
+.chassis-credit {
+    position: fixed;
+    bottom: clamp(0.6rem, 1.2vh, 1rem);
+    left: clamp(1rem, 2vw, 1.5rem);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--muted-foreground);
+    letter-spacing: 0.02em;
+    z-index: 50;
+    opacity: 0.7;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+.chassis-credit .chassis-credit-emoji {
+    font-style: normal;
+    margin: 0 0.15em;
+}
+
+body[data-nav="bottom"] .chassis-credit {
+    left: auto;
+    right: clamp(1rem, 2vw, 1.5rem);
+}
+
+/* ---------- Custom cursor ---------- */
+.chassis-cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: var(--accent);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    will-change: transform;
+}
+.chassis-cursor.visible { opacity: 1; }
+body.artifact-editor-editing .chassis-cursor { display: none; }
+
+@media (hover: none) {
+    .chassis-cursor { display: none; }
+}
+
+body.chassis-cursor-active:not(.artifact-editor-editing),
+body.chassis-cursor-active:not(.artifact-editor-editing) * { cursor: none; }
+
+/* ---------- Opt-outs ---------- */
+body[data-no-chrome] .nav-dots,
+body[data-no-chrome] .keyboard-hint,
+body[data-no-chrome] .chassis-credit,
+body[data-no-chrome] .chassis-cursor,
+body[data-no-chrome] .artifact-editor-toggle { display: none; }
+
+:fullscreen .keyboard-hint,
+:fullscreen .chassis-credit,
+:fullscreen .artifact-editor-toggle { display: none; }
+
+@media (hover: none) {
+    .keyboard-hint,
+    .chassis-credit { display: none; }
+}
+
+@media (max-width: 900px), (max-height: 560px) {
+    .nav-dots,
+    .keyboard-hint,
+    .chassis-credit,
+    .chassis-cursor { display: none; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.2s !important;
+    }
+    html { scroll-behavior: auto; }
+}
+
+/* ---------- Print (PDF export) ---------- */
+@media print {
+    .nav-dots, .keyboard-hint, .chassis-credit, .chassis-cursor { display: none !important; }
+    html, body { height: auto; overflow: visible; }
+    html { scroll-snap-type: none; }
+    .slide-viewport {
+        page-break-after: always;
+        break-after: page;
+        height: 100vh;
+    }
+    .slide-scale {
+        position: static !important;
+        transform: none !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+    .slide {
+        width: 100% !important;
+        height: auto !important;
+    }
+}
+
+</style>
+<script>
+/* =====================================================
+   PRESENTATION CHASSIS — slide controller
+   Auto-initializes on DOMContentLoaded.
+   Exposes window.slides for programmatic control.
+   ===================================================== */
+(function () {
+    'use strict';
+
+    const REVEAL_SELECTOR = '.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur';
+    const STEP_SELECTOR = '.step';
+    const ALL_REVEAL_SELECTOR = REVEAL_SELECTOR + ', ' + STEP_SELECTOR;
+    const VIEWPORT_CLASS = 'slide-viewport';
+    const SCALE_CLASS = 'slide-scale';
+
+    function _detectLang() {
+        const param = new URLSearchParams(location.search).get('lang');
+        return (param || navigator.language || 'en').slice(0, 2).toLowerCase();
+    }
+
+    class SlidePresentation {
+        constructor() {
+            this.slides = Array.from(document.querySelectorAll('.slide'));
+            if (this.slides.length === 0) return;
+
+            // Ensure every slide has an id so hashes + anchor links work.
+            // Author-defined ids are preserved; the rest get slide-N (1-indexed).
+            this.slides.forEach((slide, idx) => {
+                if (!slide.id) slide.id = `slide-${idx + 1}`;
+            });
+            this.viewports = this._setupViewports();
+            this.scales = this.viewports.map((viewport) => viewport.querySelector(`.${SCALE_CLASS}`));
+
+            // Hide every reveal element BEFORE lifting the CSS FOUC guard.
+            // After this, .reveals-ready is on <html>, so CSS no longer hides
+            // reveals — inline styles keep them hidden until JS animates them.
+            this._setupReveals();
+
+            this.navDotsContainer = this._ensureNavDots();
+            this.keyboardHint = this._ensureKeyboardHint();
+            this.credit = this._ensureCredit();
+
+            this._setupCanvasScale();
+            this._setupIntersectionObserver();
+            this._setupKeyboardNav();
+            this._setupWheelNav();
+            this._setupTouchNav();
+            this._setupViewportSync();
+            this._buildNavDots();
+            this._setupHashNav();
+            this._setupCursor();
+            this._setupPrintSettling();
+
+            // If URL has a matching hash, start there; otherwise start at slide 0.
+            const initial = this._slideIndexFromHash(location.hash);
+            this.currentSlide = initial >= 0 ? initial : 0;
+            if (this.currentSlide !== 0) {
+                this._scrollToSlide(this.currentSlide, 'auto');
+            }
+            // Reveal initial slide immediately (observer may miss it on load).
+            const first = this.slides[this.currentSlide];
+            first.classList.add('visible');
+            this._playSlideReveals(first);
+            this._updateNavDots();
+        }
+
+        /* ---------- Viewport scaffolding ----------
+           Authors write .slide as the 1920×1080 artboard. The chassis wraps
+           that authored section in viewport and scale layers. */
+        _setupViewports() {
+            return this.slides.map((slide) => {
+                const existingScale = slide.parentElement?.classList.contains(SCALE_CLASS)
+                    ? slide.parentElement
+                    : null;
+                const existingViewport = existingScale?.parentElement?.classList.contains(VIEWPORT_CLASS)
+                    ? existingScale.parentElement
+                    : null;
+                if (existingViewport) {
+                    this._syncViewportBackground(slide, existingViewport);
+                    return existingViewport;
+                }
+
+                const viewport = document.createElement('div');
+                viewport.className = VIEWPORT_CLASS;
+                const scale = document.createElement('div');
+                scale.className = SCALE_CLASS;
+
+                slide.parentNode.insertBefore(viewport, slide);
+                viewport.appendChild(scale);
+                scale.appendChild(slide);
+                this._syncViewportBackground(slide, viewport);
+
+                return viewport;
+            });
+        }
+
+        _syncViewportBackground(slide, viewport) {
+            const style = getComputedStyle(slide);
+            const hasBackgroundImage = style.backgroundImage && style.backgroundImage !== 'none';
+            const hasBackgroundColor = !['rgba(0, 0, 0, 0)', 'transparent'].includes(style.backgroundColor);
+            if (hasBackgroundImage || hasBackgroundColor) {
+                viewport.style.background = style.background;
+            } else {
+                viewport.style.background = '';
+            }
+            slide.style.background = 'transparent';
+        }
+
+        /* ---------- DOM scaffolding (auto-inserted if missing) ---------- */
+        _ensureNavDots() {
+            let el = document.getElementById('navDots');
+            if (!el) {
+                el = document.createElement('nav');
+                el.id = 'navDots';
+                el.className = 'nav-dots';
+                el.setAttribute('aria-label', 'Slide navigation');
+                document.body.appendChild(el);
+            }
+            return el;
+        }
+
+        _ensureKeyboardHint() {
+            let el = document.querySelector('.keyboard-hint');
+            if (!el) {
+                const i18n = {
+                    en: { navigate: 'navigate', restart: 'restart', fullscreen: 'fullscreen' },
+                    es: { navigate: 'navegar',   restart: 'inicio',   fullscreen: 'fullscreen' },
+                    fr: { navigate: 'naviguer',  restart: 'début',    fullscreen: 'fullscreen' },
+                    de: { navigate: 'blättern',  restart: 'anfang',   fullscreen: 'vollbild' },
+                    pt: { navigate: 'navegar',   restart: 'início',   fullscreen: 'fullscreen' },
+                    ja: { navigate: '移動',      restart: '先頭',      fullscreen: '全画面' },
+                    ko: { navigate: '이동',      restart: '처음',      fullscreen: '전체화면' },
+                    zh: { navigate: '翻页',      restart: '重置',      fullscreen: '全屏' },
+                    it: { navigate: 'navigare',  restart: 'inizio',   fullscreen: 'fullscreen' },
+                    nl: { navigate: 'bladeren',  restart: 'begin',    fullscreen: 'vollscherm' },
+                };
+                const t = i18n[_detectLang()] || i18n.en;
+                el = document.createElement('div');
+                el.className = 'keyboard-hint';
+                el.innerHTML = `<kbd>←</kbd> <kbd>→</kbd> ${t.navigate} &middot; <kbd>R</kbd> ${t.restart} &middot; <kbd>F</kbd> ${t.fullscreen}`;
+                document.body.appendChild(el);
+            }
+            return el;
+        }
+
+        _ensureCredit() {
+            let el = document.querySelector('.chassis-credit');
+            if (!el) {
+                el = document.createElement('div');
+                el.className = 'chassis-credit';
+                el.setAttribute('aria-hidden', 'true');
+                el.innerHTML = '💜 by ClickUp Brain';
+                document.body.appendChild(el);
+            }
+            return el;
+        }
+
+        /* ---------- Reveal engine ----------
+           Reveals are driven by the Web Animations API instead of CSS
+           transitions. This lets authors put .reveal* / .step on any
+           element: animation values live in the animation cascade origin
+           and win over normal author declarations, so no wrapper element
+           is required to isolate the chassis from author CSS.
+
+           State per slide:
+           - "hidden":  inline opacity/transform/filter from the 'from'
+                        keyframe of the variant. Set on init and on
+                        forward re-entry.
+           - "played":  animation is running or has run; the class
+                        `reveals-played` on the slide makes playback
+                        idempotent so observer re-fires (resize,
+                        fullscreen) don't restart the animation.
+           - "settled": animation canceled, inline styles cleared. Used
+                        for backward entries (we skip the animation and
+                        show the final state instantly) and for print. */
+
+        _setupReveals() {
+            // Lift the CSS FOUC guard first so getComputedStyle reads each
+            // element's natural opacity, not the guard's blanket opacity: 0.
+            // No paint occurs mid-task — inline hidden styles are applied
+            // before the browser yields, so there is no visible flash.
+            document.documentElement.classList.add('reveals-ready');
+            this.slides.forEach((slide) => {
+                slide.querySelectorAll(ALL_REVEAL_SELECTOR).forEach((el) => {
+                    el._targetOpacity = parseFloat(getComputedStyle(el).opacity);
+                    this._applyHiddenStyle(el);
+                });
+            });
+        }
+
+        _setupPrintSettling() {
+            // Browsers snapshot the document for print/PDF export. WAAPI
+            // animations don't necessarily complete in that snapshot, so
+            // settle every slide to its final state first. After printing,
+            // reset — but only for slides that haven't already been viewed,
+            // so the audience experience picks up where it left off.
+            window.addEventListener('beforeprint', () => {
+                this.slides.forEach((slide) => this._settleSlide(slide));
+            });
+        }
+
+        _readTokens() {
+            const cs = getComputedStyle(document.documentElement);
+            const rawDuration = parseFloat(cs.getPropertyValue('--reveal-duration'));
+            const duration = Number.isFinite(rawDuration) ? rawDuration * 1000 : 800;
+            const ease = cs.getPropertyValue('--reveal-ease').trim() || 'cubic-bezier(0.16, 1, 0.3, 1)';
+            const distance = cs.getPropertyValue('--reveal-distance').trim() || '28px';
+            const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            return {
+                duration: reducedMotion ? 1 : duration,
+                ease,
+                distance,
+            };
+        }
+
+        _getRevealDelay(el) {
+            // Use getAttribute('class') rather than el.className: on SVG
+            // elements, `.className` is an SVGAnimatedString (not a string)
+            // and calling .match on it throws. getAttribute is uniform
+            // across HTML and SVG.
+            const classes = el.getAttribute('class') || '';
+            const m = classes.match(/\bd([1-8])\b/);
+            if (!m) return 0;
+            // Matches CSS .dN: d1 = 100ms, d2 = 250ms, +150ms per step.
+            return 100 + (parseInt(m[1], 10) - 1) * 150;
+        }
+
+        _getRevealKeyframes(el, distance) {
+            const to = el._targetOpacity ?? 1;
+            if (el.classList.contains('reveal-left')) {
+                return [
+                    { opacity: 0, transform: `translateX(calc(-1 * ${distance}))` },
+                    { opacity: to, transform: 'translateX(0)' },
+                ];
+            }
+            if (el.classList.contains('reveal-right')) {
+                return [
+                    { opacity: 0, transform: `translateX(${distance})` },
+                    { opacity: to, transform: 'translateX(0)' },
+                ];
+            }
+            if (el.classList.contains('reveal-scale')) {
+                return [
+                    { opacity: 0, transform: 'scale(0.88)' },
+                    { opacity: to, transform: 'scale(1)' },
+                ];
+            }
+            if (el.classList.contains('reveal-blur')) {
+                return [
+                    { opacity: 0, filter: 'blur(10px)' },
+                    { opacity: to, filter: 'blur(0)' },
+                ];
+            }
+            // Default: .reveal or .step (slide up + fade)
+            return [
+                { opacity: 0, transform: `translateY(${distance})` },
+                { opacity: to, transform: 'translateY(0)' },
+            ];
+        }
+
+        _applyHiddenStyle(el) {
+            const { distance } = this._readTokens();
+            const from = this._getRevealKeyframes(el, distance)[0];
+            if ('opacity' in from) el.style.opacity = from.opacity;
+            if ('transform' in from) el.style.transform = from.transform;
+            if ('filter' in from) el.style.filter = from.filter;
+        }
+
+        _clearHiddenStyle(el) {
+            el.style.opacity = '';
+            el.style.transform = '';
+            el.style.filter = '';
+        }
+
+        _cancelReveal(el) {
+            if (el._revealAnim) {
+                el._revealAnim.cancel();
+                el._revealAnim = null;
+            }
+        }
+
+        _playReveal(el, delayOverride) {
+            this._cancelReveal(el);
+            const { duration, ease, distance } = this._readTokens();
+            const delay = typeof delayOverride === 'number' ? delayOverride : this._getRevealDelay(el);
+            const keyframes = this._getRevealKeyframes(el, distance);
+            // fill: 'backwards' applies the 'from' keyframe during the
+            // stagger delay so the element stays hidden until its turn,
+            // without pinning the 'to' keyframe after the animation ends.
+            // This lets co-existing author CSS (e.g. a `.pulse` CSS
+            // animation on the same element) take over naturally once the
+            // entrance completes — otherwise our fill would mask anything
+            // the author wanted to happen post-reveal.
+            const anim = el.animate(keyframes, {
+                duration,
+                delay,
+                easing: ease,
+                fill: 'backwards',
+            });
+            el._revealAnim = anim;
+            // Safe to clear inline 'from' styles now — the animation's
+            // backwards-fill holds the element at the 'from' keyframe for
+            // the duration of any stagger delay.
+            this._clearHiddenStyle(el);
+        }
+
+        _playSlideReveals(slide) {
+            if (slide.classList.contains('reveals-played')) return;
+            slide.classList.add('reveals-played');
+            slide.querySelectorAll(REVEAL_SELECTOR).forEach((el) => this._playReveal(el));
+            // .step elements stay hidden until the user advances.
+        }
+
+        _resetSlideReveals(slide) {
+            // Forward re-entry: cancel in-flight animations, re-hide
+            // everything, and reset step state so the slide replays cleanly
+            // when the observer next adds .visible.
+            slide.classList.remove('reveals-played');
+            slide.querySelectorAll(ALL_REVEAL_SELECTOR).forEach((el) => {
+                this._cancelReveal(el);
+                this._applyHiddenStyle(el);
+            });
+            slide.querySelectorAll('.step.step-shown').forEach((el) => el.classList.remove('step-shown'));
+        }
+
+        _settleSlide(slide) {
+            // Print / PDF export: jump to the final state with everything
+            // shown, so every step appears in the exported document.
+            slide.classList.add('reveals-played');
+            slide.querySelectorAll(ALL_REVEAL_SELECTOR).forEach((el) => {
+                this._cancelReveal(el);
+                this._clearHiddenStyle(el);
+            });
+            slide.querySelectorAll('.step').forEach((el) => el.classList.add('step-shown'));
+        }
+
+        _rewindSlide(slide) {
+            // Backward re-entry: show reveals instantly (no replay — the
+            // viewer already saw the intro) but hide every step, so the
+            // slide is positioned at the start of its stepped content and
+            // can be stepped through again.
+            slide.classList.add('reveals-played');
+            slide.querySelectorAll(REVEAL_SELECTOR).forEach((el) => {
+                this._cancelReveal(el);
+                this._clearHiddenStyle(el);
+            });
+            slide.querySelectorAll('.step').forEach((el) => {
+                el.classList.remove('step-shown');
+                this._cancelReveal(el);
+                this._applyHiddenStyle(el);
+            });
+        }
+
+        /* ---------- Navigation ----------
+           goTo scrolls to the target. Both forward-replay and backward-
+           rewind need to mutate the target BEFORE scrolling — while it's
+           still offscreen — so the viewer never sees the old state flash
+           into view. Resetting after the slide is in view causes a visible
+           "show then hide" blink; the IntersectionObserver fires too late
+           (80% threshold) to catch it. */
+        goTo(index) {
+            const clamped = Math.max(0, Math.min(this.slides.length - 1, index));
+            if (clamped === this.currentSlide) return;
+
+            const target = this.slides[clamped];
+            const goingForward = clamped > this.currentSlide;
+
+            if (target.classList.contains('visible')) {
+                if (goingForward) {
+                    // Forward replay: full reset so the observer can play reveals fresh.
+                    target.classList.remove('visible');
+                    this._resetSlideReveals(target);
+                } else {
+                    // Backward rewind: hide any shown steps so the slide
+                    // scrolls back in at the start of its stepped content.
+                    this._rewindSlide(target);
+                }
+            }
+
+            this._scrollToSlide(clamped, 'smooth');
+        }
+
+        _scrollToSlide(index, behavior) {
+            this.viewports[index]?.scrollIntoView({ behavior, block: 'start' });
+        }
+
+        _slideIndexFromHash(hash) {
+            if (!hash) return -1;
+            return this.slides.findIndex((s) => '#' + s.id === hash);
+        }
+
+        _syncHash() {
+            const slide = this.slides[this.currentSlide];
+            if (!slide || !slide.id) return;
+            const newHash = '#' + slide.id;
+            if (location.hash !== newHash) {
+                // replaceState — keeps the URL in sync without polluting history,
+                // so the browser back button exits the deck instead of stepping through slides.
+                history.replaceState(null, '', newHash);
+            }
+        }
+
+        _setupHashNav() {
+            // React to external hash changes (anchor link clicks, back/forward if user uses pushState manually)
+            window.addEventListener('hashchange', () => {
+                const idx = this._slideIndexFromHash(location.hash);
+                if (idx >= 0 && idx !== this.currentSlide) this.goTo(idx);
+            });
+        }
+
+        /* ---------- Custom cursor ----------
+           Accent disc that follows the pointer, hidden after idle. */
+        _setupCursor() {
+            if (!matchMedia('(hover: hover)').matches) return;
+
+            const cursor = document.createElement('div');
+            cursor.className = 'chassis-cursor';
+            cursor.setAttribute('aria-hidden', 'true');
+            document.body.appendChild(cursor);
+            document.body.classList.add('chassis-cursor-active');
+
+            const half = 16;  // matches width/height / 2 in CSS
+            const IDLE_MS = 2500;
+            let idleTimer = null;
+
+            const show = () => {
+                cursor.classList.add('visible');
+                clearTimeout(idleTimer);
+                idleTimer = setTimeout(() => {
+                    cursor.classList.remove('visible');
+                }, IDLE_MS);
+            };
+            const hide = () => {
+                clearTimeout(idleTimer);
+                cursor.classList.remove('visible');
+            };
+
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.transform = `translate3d(${e.clientX - half}px, ${e.clientY - half}px, 0)`;
+                show();
+            });
+            document.addEventListener('mouseleave', hide);
+            document.addEventListener('mouseenter', show);
+        }
+
+        /* ---------- Fullscreen ---------- */
+        toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen?.().catch(() => {});
+            } else {
+                document.exitFullscreen?.();
+            }
+        }
+
+        next() { this.goTo(this.currentSlide + 1); }
+        prev() { this.goTo(this.currentSlide - 1); }
+        first() { this.goTo(0); }
+        last() { this.goTo(this.slides.length - 1); }
+
+        /* ---------- Step-aware advance / retreat ----------
+           advance() reveals the next .step on the current slide (if any),
+           otherwise advances to the next slide. retreat() hides the last
+           revealed step, otherwise goes back to the previous slide. */
+        advance() {
+            const current = this.slides[this.currentSlide];
+            const nextStep = current?.querySelector('.step:not(.step-shown)');
+            if (nextStep) {
+                nextStep.classList.add('step-shown');
+                // No stagger on click-reveal — the user's gesture is the trigger.
+                this._playReveal(nextStep, 0);
+                return;
+            }
+            this.next();
+        }
+        retreat() {
+            const current = this.slides[this.currentSlide];
+            const shown = current?.querySelectorAll('.step.step-shown');
+            if (shown && shown.length > 0) {
+                const last = shown[shown.length - 1];
+                last.classList.remove('step-shown');
+                this._cancelReveal(last);
+                this._applyHiddenStyle(last);
+                return;
+            }
+            this.prev();
+        }
+
+        /* ---------- Intersection observer ----------
+           Fire late (>= 80% in view) so reveals play on a settled slide.
+           This is the single source of truth for active-slide state.
+
+           Forward:  add .visible, play reveals. (goTo() has already reset
+                     the target to pre-reveal state if this is a re-visit,
+                     so the animation is fresh either way.)
+           Backward: add .visible, rewind to the start of the stepped
+                     content — reveals are shown instantly (no replay) and
+                     every step is hidden again so the viewer can step
+                     through it fresh. */
+        _setupIntersectionObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const idx = this.viewports.indexOf(entry.target);
+                    if (idx < 0) return;
+                    const slide = this.slides[idx];
+
+                    if (idx === this.currentSlide) {
+                        // Same-slide re-fire (initial load, resize, fullscreen).
+                        if (!slide.classList.contains('visible')) {
+                            slide.classList.add('visible');
+                        }
+                        // Idempotent: only plays if not already marked played.
+                        this._playSlideReveals(slide);
+                        return;
+                    }
+
+                    const goingForward = idx > this.currentSlide;
+                    this.currentSlide = idx;
+                    this._updateNavDots();
+                    this._syncHash();
+
+                    slide.classList.add('visible');
+                    if (goingForward) {
+                        this._playSlideReveals(slide);
+                    } else {
+                        this._rewindSlide(slide);
+                    }
+                });
+            }, { threshold: 0.8 });
+
+            this.viewports.forEach((viewport) => observer.observe(viewport));
+        }
+
+        /* ---------- Keyboard ---------- */
+        _setupKeyboardNav() {
+            document.addEventListener('keydown', (e) => {
+                // Skip when user is editing text
+                if (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+
+                switch (e.key) {
+                    // Step-aware: consume steps first, then advance slides
+                    case 'ArrowDown':
+                    case 'ArrowRight':
+                    case ' ':
+                        e.preventDefault(); this.advance(); break;
+                    case 'ArrowUp':
+                    case 'ArrowLeft':
+                        e.preventDefault(); this.retreat(); break;
+                    // Slide-level: always skip past steps
+                    case 'PageDown':
+                        e.preventDefault(); this.next(); break;
+                    case 'PageUp':
+                        e.preventDefault(); this.prev(); break;
+                    case 'Home':
+                        e.preventDefault(); this.first(); break;
+                    case 'End':
+                        e.preventDefault(); this.last(); break;
+                    case 'f':
+                    case 'F':
+                        e.preventDefault(); this.toggleFullscreen(); break;
+                    case 'r':
+                    case 'R':
+                        e.preventDefault(); this.first(); break;
+                }
+            });
+        }
+
+        /* ---------- Wheel / trackpad ----------
+           ALWAYS preventDefault — letting any native wheel scroll through
+           races against scrollIntoView + mandatory snap, and blocks macOS
+           two-finger horizontal swipes from triggering browser back/forward.
+           Whichever axis has the larger magnitude wins, so vertical scroll
+           and horizontal trackpad swipes both drive advance/retreat. Lock
+           briefly after a gesture so trackpad inertia (continuous small
+           deltas) can't spam next(). */
+        _setupWheelNav() {
+            let locked = false;
+            window.addEventListener('wheel', (e) => {
+                if (e.ctrlKey) return;                // preserve browser pinch-zoom (ctrl+wheel)
+                e.preventDefault();                   // block native scroll + horizontal back-swipe
+                if (locked) return;
+                const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                if (Math.abs(delta) < 20) return;     // ignore tiny flicks
+                locked = true;
+                if (delta > 0) this.advance(); else this.retreat();
+                setTimeout(() => { locked = false; }, 500);
+            }, { passive: false });
+        }
+
+        /* ---------- Touch / swipe ----------
+           Horizontal swipes advance / retreat slides; left = next, right =
+           prev (matches stories / carousel conventions). Dominantly
+           vertical swipes fall through to native scroll-snap so the
+           existing top/bottom behavior keeps working. A time budget
+           rejects slow pans that were really aborted scrolls. */
+        _setupTouchNav() {
+            const MIN_DISTANCE = 50;     // px — below this is a tap or jitter
+            const MAX_TIME = 600;        // ms — slower than this is a pan, not a swipe
+            const DOMINANCE = 1.2;       // horizontal must beat vertical by this factor
+
+            let startX = 0, startY = 0, startTime = 0;
+            let tracking = false;
+
+            window.addEventListener('touchstart', (e) => {
+                if (document.body.classList.contains('artifact-editor-editing')) { tracking = false; return; }
+                if (e.touches.length !== 1) { tracking = false; return; }
+                const t = e.touches[0];
+                startX = t.clientX;
+                startY = t.clientY;
+                startTime = performance.now();
+                tracking = true;
+            }, { passive: true });
+
+            window.addEventListener('touchend', (e) => {
+                if (!tracking) return;
+                tracking = false;
+                const t = e.changedTouches[0];
+                const dx = t.clientX - startX;
+                const dy = t.clientY - startY;
+                const ax = Math.abs(dx), ay = Math.abs(dy);
+                if (ax < MIN_DISTANCE) return;
+                if (ax < ay * DOMINANCE) return;
+                if (performance.now() - startTime > MAX_TIME) return;
+                if (dx < 0) this.advance(); else this.retreat();
+            }, { passive: true });
+
+            window.addEventListener('touchcancel', () => { tracking = false; }, { passive: true });
+        }
+
+        /* ---------- Canvas scaling ----------
+           Each scaler holds a fixed 1920×1080 slide. Compute the
+           scale factor that fits it inside the viewport and apply via
+           CSS custom property. Runs on init, resize, and fullscreen. */
+        _setupCanvasScale() {
+            const CANVAS_W = 1920;
+            const CANVAS_H = 1080;
+            const scales = this.scales;
+
+            const update = () => {
+                const scale = Math.min(
+                    window.innerWidth / CANVAS_W,
+                    window.innerHeight / CANVAS_H
+                );
+                scales.forEach((el) => {
+                    el?.style.setProperty('--slide-scale', scale);
+                });
+            };
+
+            update();
+            window.addEventListener('resize', update);
+            document.addEventListener('fullscreenchange', () => {
+                requestAnimationFrame(update);
+            });
+        }
+
+        /* ---------- Viewport sync ----------
+           Resize / fullscreenchange → realign current slide. Each slide is
+           100vh, so a viewport height change leaves the existing scroll
+           position out of alignment with the slide top; scroll-snap doesn't
+           re-snap on its own. */
+        _setupViewportSync() {
+            const realign = () => {
+                requestAnimationFrame(() => {
+                    this._scrollToSlide(this.currentSlide, 'auto');
+                });
+            };
+            window.addEventListener('resize', realign);
+            document.addEventListener('fullscreenchange', realign);
+        }
+
+        /* ---------- Nav dots ---------- */
+        _buildNavDots() {
+            // Clear first — prevents duplicates when DOM is re-serialized/re-opened
+            this.navDotsContainer.innerHTML = '';
+            this.slides.forEach((slide, idx) => {
+                const dot = document.createElement('button');
+                dot.setAttribute('aria-label', `Go to slide ${idx + 1}`);
+                if (idx === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => this.goTo(idx));
+                this.navDotsContainer.appendChild(dot);
+            });
+        }
+
+        _updateNavDots() {
+            const dots = this.navDotsContainer.querySelectorAll('button');
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === this.currentSlide);
+            });
+        }
+    }
+
+    /* ---------- Auto-init ---------- */
+    function init() {
+        // Each slide canvas is its own editable host for the inline editor.
+        document.querySelectorAll('.slide').forEach(function (el) {
+            el.classList.add('artifact-editable');
+        });
+        window.slides = new SlidePresentation();
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+
+</script>
+<!-- /skill:chassis -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CGE 103 - Week 1 Session 2: Mathematics as a Language of Patterns</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" />
+    <style>
+        :root {
+            --background: #fafafa;
+            --foreground: #1a1a1a;
+            --accent: #FF5722;
+            --accent-foreground: #ffffff;
+            --card: #ffffff;
+            --border: color-mix(in srgb, var(--foreground) 10%, transparent);
+            --blue: #1565C0;
+            --green: #2E7D32;
+            --font-display: 'Archivo Black', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+        }
+        h1,h2,h3{font-family:var(--font-display);letter-spacing:-0.02em}
+        p,li,span,td,th{font-family:var(--font-body)}
+        .slide{padding:80px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+        .eyebrow{font-family:var(--font-body);font-size:22px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent)}
+        .title-slide{background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);color:#fff;align-items:center;text-align:center}
+        .title-slide h1{font-size:82px;line-height:1.05;color:#fff;margin-bottom:20px;position:relative}
+        .title-slide .subtitle{font-size:32px;color:rgba(255,255,255,0.7);position:relative}
+        .title-slide .accent-bar{width:120px;height:6px;background:var(--accent);margin:30px auto;border-radius:3px;position:relative}
+        .content-slide h2{font-size:54px;line-height:1.1;margin-bottom:36px}
+        .content-slide p{font-size:30px;line-height:1.5;color:color-mix(in srgb,var(--foreground) 75%,transparent);max-width:1200px}
+        .content-slide ul{list-style:none;padding:0}
+        .content-slide ul li{font-size:28px;line-height:1.5;padding:10px 0 10px 40px;position:relative;color:color-mix(in srgb,var(--foreground) 80%,transparent)}
+        .content-slide ul li::before{content:'';position:absolute;left:0;top:20px;width:12px;height:12px;background:var(--accent);border-radius:50%}
+        .image-full{position:absolute;inset:0;z-index:0}
+        .image-full img{width:100%;height:100%;object-fit:cover}
+        .image-full::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,26,26,0.85) 0%,rgba(26,26,26,0.4) 100%)}
+        .image-overlay-content{position:relative;z-index:1}
+        .image-container{border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.12)}
+        .slide-image{width:100%;height:100%;object-fit:cover;border-radius:16px}
+        .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:36px}
+        .card-grid.two-col{grid-template-columns:repeat(2,1fr)}
+        .card{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:32px}
+        .card h3{font-size:26px;margin-bottom:10px}
+        .card p{font-size:22px;line-height:1.4;color:color-mix(in srgb,var(--foreground) 65%,transparent)}
+        .card-image{width:100%;height:130px;object-fit:cover;border-radius:10px;margin-bottom:14px}
+        table{width:100%;border-collapse:collapse;margin-top:28px}
+        th{background:var(--accent);color:var(--accent-foreground);font-size:22px;font-weight:600;padding:14px 18px;text-align:left}
+        td{font-size:22px;padding:12px 18px;border-bottom:1px solid var(--border)}
+        tr:nth-child(even) td{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+        .section-divider{background:linear-gradient(135deg,var(--accent) 0%,#FF8A65 100%);color:#fff;align-items:center;text-align:center}
+        .section-divider h1{font-size:88px;color:#fff}
+        .section-divider .section-num{font-size:180px;opacity:0.15;position:absolute;top:40px;right:80px;font-family:var(--font-display)}
+        .highlight-box{background:color-mix(in srgb,var(--accent) 8%,transparent);border-left:6px solid var(--accent);padding:28px 36px;border-radius:0 12px 12px 0;margin-top:28px}
+        .highlight-box p{font-size:26px;color:var(--foreground)}
+        .two-col-layout{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:36px}
+        .numbered-list{counter-reset:item;list-style:none;padding:0}
+        .numbered-list li{counter-increment:item;font-size:26px;padding:14px 0 14px 56px;position:relative;color:color-mix(in srgb,var(--foreground) 80%,transparent)}
+        .numbered-list li::before{content:counter(item,decimal-leading-zero);position:absolute;left:0;font-family:var(--font-display);font-size:26px;color:var(--accent)}
+        .example-box{background:#f8f9fa;border:2px solid var(--border);border-radius:12px;padding:28px;margin:16px 0}
+        .example-box .label{font-size:14px;font-weight:700;text-transform:uppercase;color:var(--accent);letter-spacing:0.08em;margin-bottom:8px}
+        .pattern-display{font-size:48px;font-family:var(--font-display);color:var(--blue);text-align:center;padding:20px;letter-spacing:4px}
+        .shape-circle{position:absolute;border-radius:50%;opacity:0.04;background:var(--accent);animation:float 12s ease-in-out infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+        .shape-1{width:350px;height:350px;top:-80px;right:-80px}
+        .shape-2{width:220px;height:220px;bottom:-50px;left:-50px;animation-delay:-4s}
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: Title -->
+<section class="slide title-slide">
+    <div class="image-full">
+        <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1920&q=80" alt="Mathematical patterns and formulas" />
+    </div>
+    <div class="image-overlay-content" style="text-align:center;">
+        <span style="font-size:24px;color:var(--accent);font-weight:700;letter-spacing:0.05em" class="reveal d1">CGE 103 • WEEK 1, SESSION 2</span>
+        <div class="accent-bar reveal d2"></div>
+        <h1 class="reveal d3" style="font-size:76px;">Mathematics as a<br>Language of Patterns</h1>
+        <p class="subtitle reveal d4">Relationships and Decisions</p>
+    </div>
+</section>
+
+<!-- SLIDE 2: Recap -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Quick Recap</span>
+    <h2 class="reveal d2">Last Session We Learned...</h2>
+    <ul class="reveal d3">
+        <li>Mathematics is a <strong>way of thinking</strong>, not just computation</li>
+        <li>Math is <strong>everywhere</strong>: daily life, business, technology, nature</li>
+        <li>As BSAIS students, math is your <strong>professional core</strong></li>
+        <li>This course focuses on <strong>understanding & application</strong></li>
+    </ul>
+    <div class="highlight-box reveal d4">
+        <p>Today: How does mathematics <strong>communicate</strong> ideas through patterns, symbols, and relationships?</p>
+    </div>
+</section>
+
+<!-- SLIDE 3: What is a Pattern? -->
+<section class="slide content-slide">
+    <div class="shape-circle shape-1"></div>
+    <span class="eyebrow reveal d1">Core Concept</span>
+    <h2 class="reveal d2">What is a Pattern?</h2>
+    <div class="two-col-layout reveal d3">
+        <div>
+            <p style="font-size:28px;margin-bottom:20px;">A pattern is any <strong>regularity</strong> that can be recognized, described, and predicted.</p>
+            <p style="font-size:26px;color:#666;">Patterns can be found in:</p>
+            <ul style="margin-top:12px;">
+                <li>Numbers (1, 3, 5, 7, 9...)</li>
+                <li>Shapes (⬡ ⬡ ⬡ repeated)</li>
+                <li>Events (schedule, routine)</li>
+                <li>Data (sales trends, seasons)</li>
+            </ul>
+        </div>
+        <div class="image-container" style="height:340px;">
+            <img src="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?w=600&q=80" alt="Geometric tile patterns showing repetition" class="slide-image" />
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 4: Why Patterns Matter -->
+<section class="slide content-slide" style="align-items:center;text-align:center;">
+    <h2 class="reveal d1" style="font-size:60px;">Why Do Patterns Matter?</h2>
+    <div class="card-grid reveal d2" style="max-width:1400px;margin-top:50px;">
+        <div class="card" style="text-align:center;">
+            <p style="font-size:48px;margin-bottom:12px;">🔮</p>
+            <h3>Prediction</h3>
+            <p>If we see a pattern, we can predict what comes next</p>
+        </div>
+        <div class="card" style="text-align:center;">
+            <p style="font-size:48px;margin-bottom:12px;">🗣️</p>
+            <h3>Communication</h3>
+            <p>Patterns let us describe complex ideas simply</p>
+        </div>
+        <div class="card" style="text-align:center;">
+            <p style="font-size:48px;margin-bottom:12px;">💡</p>
+            <h3>Decision-Making</h3>
+            <p>Recognizing patterns helps us make better choices</p>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 5: Section Divider -->
+<section class="slide section-divider">
+    <span class="section-num reveal d1">01</span>
+    <h1 class="reveal d2">Number<br>Patterns</h1>
+    <p style="font-size:28px;color:rgba(255,255,255,0.7);margin-top:16px" class="reveal d3">The foundation of mathematical language</p>
+</section>
+
+<!-- SLIDE 6: Number Pattern Examples -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Recognizing Patterns</span>
+    <h2 class="reveal d2">Can You See the Pattern?</h2>
+    <div class="example-box reveal d3">
+        <div class="label">Pattern A</div>
+        <div class="pattern-display">2, 4, 6, 8, 10, ?</div>
+        <p style="text-align:center;font-size:22px;color:#666;">Each number increases by <strong>+2</strong> (even numbers)</p>
+    </div>
+    <div class="example-box reveal d4">
+        <div class="label">Pattern B</div>
+        <div class="pattern-display">3, 6, 12, 24, 48, ?</div>
+        <p style="text-align:center;font-size:22px;color:#666;">Each number is multiplied by <strong>×2</strong> (doubling)</p>
+    </div>
+    <div class="example-box reveal d5">
+        <div class="label">Pattern C</div>
+        <div class="pattern-display">1, 4, 9, 16, 25, ?</div>
+        <p style="text-align:center;font-size:22px;color:#666;">Perfect squares: 1², 2², 3², 4², 5², <strong>6²=36</strong></p>
+    </div>
+</section>
+
+<!-- SLIDE 7: Real-Life Number Patterns -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Everyday Math</span>
+    <h2 class="reveal d2">Patterns in Real Life</h2>
+    <div class="card-grid two-col reveal d3">
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&q=75" alt="Savings growing over time" class="card-image" />
+            <h3>💰 Savings Growth</h3>
+            <p>If you save ₱50/week: ₱50, ₱100, ₱150, ₱200... (arithmetic pattern, +50 each week)</p>
+        </div>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&q=75" alt="Calendar schedule" class="card-image" />
+            <h3>📅 Class Schedule</h3>
+            <p>TTH classes repeat every 7 days. Day 2, 4, 9, 11, 16, 18... (pattern of +2, +5, +2, +5)</p>
+        </div>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&q=75" alt="Shopping receipt" class="card-image" />
+            <h3>🛒 Installment Payments</h3>
+            <p>₱5,000 gadget in 5 months: ₱1,000/month. Remaining: ₱4000, ₱3000, ₱2000, ₱1000, ₱0</p>
+        </div>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=400&q=75" alt="Data chart showing trends" class="card-image" />
+            <h3>📈 Sales Trends</h3>
+            <p>If monthly sales grow by 10%: ₱10K, ₱11K, ₱12.1K, ₱13.3K... (geometric pattern)</p>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 8: Section Divider - Symbols -->
+<section class="slide section-divider">
+    <span class="section-num reveal d1">02</span>
+    <h1 class="reveal d2">Mathematical<br>Symbols</h1>
+    <p style="font-size:28px;color:rgba(255,255,255,0.7);margin-top:16px" class="reveal d3">The alphabet of mathematical language</p>
+</section>
+
+<!-- SLIDE 9: Symbols as Language -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Math as Language</span>
+    <h2 class="reveal d2">Symbols Communicate Ideas</h2>
+    <div class="two-col-layout reveal d3">
+        <div>
+            <p style="font-size:26px;margin-bottom:24px;">Just like Filipino uses letters (A-Z) and English uses words, mathematics uses <strong>symbols</strong> to express ideas precisely.</p>
+            <div class="example-box">
+                <div class="label">English</div>
+                <p style="font-size:24px;">"The total cost equals the price multiplied by the quantity"</p>
+            </div>
+            <div class="example-box">
+                <div class="label">Math Language</div>
+                <p style="font-size:32px;font-weight:700;color:var(--blue);text-align:center;">C = P × Q</p>
+            </div>
+        </div>
+        <div>
+            <p style="font-size:24px;color:#666;margin-bottom:16px;">Which is clearer? More precise? Faster to read?</p>
+            <div class="highlight-box" style="margin-top:0;">
+                <p style="font-size:22px;">Mathematical language is <strong>universal</strong>: a formula written in the Philippines means the same thing in Japan, Brazil, or Germany.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 10: Common Math Symbols Table -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Reference</span>
+    <h2 class="reveal d2">Essential Math Symbols</h2>
+    <table class="reveal d3">
+        <tr><th>Symbol</th><th>Meaning</th><th>Example</th></tr>
+        <tr><td><strong>+, −, ×, ÷</strong></td><td>Operations</td><td>5 + 3 = 8</td></tr>
+        <tr><td><strong>=</strong></td><td>Equals / is the same as</td><td>2 + 2 = 4</td></tr>
+        <tr><td><strong>≠</strong></td><td>Not equal to</td><td>5 ≠ 3</td></tr>
+        <tr><td><strong>&lt; , &gt; , ≤ , ≥</strong></td><td>Less than, greater than</td><td>Budget ≤ ₱500</td></tr>
+        <tr><td><strong>x, y, n</strong></td><td>Variables (unknowns)</td><td>Let x = your score</td></tr>
+        <tr><td><strong>∴</strong></td><td>Therefore</td><td>x = 5, ∴ 2x = 10</td></tr>
+        <tr><td><strong>Σ</strong></td><td>Sum of / total</td><td>Σ expenses = total spending</td></tr>
+    </table>
+</section>
+
+<!-- SLIDE 11: Variables Explained -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Key Concept</span>
+    <h2 class="reveal d2">What is a Variable?</h2>
+    <div class="two-col-layout reveal d3">
+        <div>
+            <p style="font-size:28px;margin-bottom:20px;">A <strong>variable</strong> is a symbol (usually a letter) that represents a value that can <strong>change</strong>.</p>
+            <div class="example-box">
+                <div class="label">Daily Budget Example</div>
+                <p style="font-size:24px;">Let <strong>B</strong> = your daily baon<br>Let <strong>L</strong> = lunch cost<br>Let <strong>M</strong> = meryenda cost<br>Remaining = <strong>B − L − M</strong></p>
+            </div>
+            <p style="font-size:24px;color:#666;margin-top:16px;">If B = ₱150, L = ₱60, M = ₱30<br>Remaining = 150 − 60 − 30 = <strong>₱60</strong></p>
+        </div>
+        <div class="image-container" style="height:350px;">
+            <img src="https://images.unsplash.com/photo-1596495577886-d920f1fb7238?w=600&q=80" alt="Mathematical variables and equations" class="slide-image" />
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 12: Expressions vs Equations -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Distinction</span>
+    <h2 class="reveal d2">Expressions vs. Equations</h2>
+    <div class="card-grid two-col reveal d3">
+        <div class="card" style="border-color:var(--blue);">
+            <h3 style="color:var(--blue);">Expression</h3>
+            <p style="font-size:24px;margin-bottom:12px;">A combination of numbers, variables, and operations. <strong>No equals sign.</strong></p>
+            <div class="example-box" style="margin:0;">
+                <p style="font-size:26px;text-align:center;font-weight:600;color:var(--blue);">3x + 5</p>
+                <p style="font-size:26px;text-align:center;font-weight:600;color:var(--blue);">P × Q</p>
+                <p style="font-size:26px;text-align:center;font-weight:600;color:var(--blue);">B − L − M</p>
+            </div>
+        </div>
+        <div class="card" style="border-color:var(--green);">
+            <h3 style="color:var(--green);">Equation</h3>
+            <p style="font-size:24px;margin-bottom:12px;">A statement that two expressions are <strong>equal</strong>. Has an equals sign (=).</p>
+            <div class="example-box" style="margin:0;">
+                <p style="font-size:26px;text-align:center;font-weight:600;color:var(--green);">3x + 5 = 20</p>
+                <p style="font-size:26px;text-align:center;font-weight:600;color:var(--green);">C = P × Q</p>
+                <p style="font-size:26px;text-align:center;font-weight:600;color:var(--green);">R = B − L − M</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 13: Section Divider - Relationships -->
+<section class="slide section-divider">
+    <span class="section-num reveal d1">03</span>
+    <h1 class="reveal d2">Mathematical<br>Relationships</h1>
+    <p style="font-size:28px;color:rgba(255,255,255,0.7);margin-top:16px" class="reveal d3">How values connect to each other</p>
+</section>
+
+<!-- SLIDE 14: What is a Relationship? -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Connections</span>
+    <h2 class="reveal d2">Mathematical Relationships</h2>
+    <p class="reveal d3" style="font-size:28px;margin-bottom:28px;">A <strong>relationship</strong> describes how one quantity depends on or connects to another.</p>
+    <div class="card-grid reveal d4">
+        <div class="card" style="text-align:center;">
+            <p style="font-size:36px;margin-bottom:8px;">⏰ → 💰</p>
+            <h3>Hours & Earnings</h3>
+            <p>More hours worked = more income</p>
+        </div>
+        <div class="card" style="text-align:center;">
+            <p style="font-size:36px;margin-bottom:8px;">📚 → 📈</p>
+            <h3>Study & Grades</h3>
+            <p>More study time = higher scores (generally)</p>
+        </div>
+        <div class="card" style="text-align:center;">
+            <p style="font-size:36px;margin-bottom:8px;">🛒 → 💸</p>
+            <h3>Quantity & Cost</h3>
+            <p>More items bought = higher total bill</p>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 15: Representing Relationships -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Multiple Representations</span>
+    <h2 class="reveal d2">Ways to Show Relationships</h2>
+    <div class="card-grid two-col reveal d3">
+        <div class="card">
+            <h3>📝 Words</h3>
+            <p>"The total fare is ₱13 for the first 4 km plus ₱1.50 for each additional km"</p>
+        </div>
+        <div class="card">
+            <h3>🔢 Formula</h3>
+            <p style="font-size:28px;font-weight:700;color:var(--blue);margin-top:8px;">F = 13 + 1.50(d − 4)</p>
+            <p>where d = total km, d > 4</p>
+        </div>
+        <div class="card">
+            <h3>📊 Table</h3>
+            <table style="margin-top:8px;font-size:18px;">
+                <tr><th>km</th><th>Fare</th></tr>
+                <tr><td>4</td><td>₱13.00</td></tr>
+                <tr><td>5</td><td>₱14.50</td></tr>
+                <tr><td>6</td><td>₱16.00</td></tr>
+                <tr><td>7</td><td>₱17.50</td></tr>
+            </table>
+        </div>
+        <div class="card">
+            <h3>📈 Graph</h3>
+            <div style="height:120px;display:flex;align-items:flex-end;gap:8px;padding:12px 0;">
+                <div style="width:30px;height:50%;background:var(--accent);border-radius:4px 4px 0 0;"></div>
+                <div style="width:30px;height:60%;background:var(--accent);border-radius:4px 4px 0 0;"></div>
+                <div style="width:30px;height:70%;background:var(--accent);border-radius:4px 4px 0 0;"></div>
+                <div style="width:30px;height:80%;background:var(--accent);border-radius:4px 4px 0 0;"></div>
+                <div style="width:30px;height:90%;background:var(--accent);border-radius:4px 4px 0 0;"></div>
+            </div>
+            <p style="font-size:18px;color:#666;">Linear increase (straight line pattern)</p>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 16: Jeepney Fare Activity -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Guided Example</span>
+    <h2 class="reveal d2">Jeepney Fare Pattern</h2>
+    <div class="two-col-layout reveal d3">
+        <div>
+            <table>
+                <tr><th>Distance (km)</th><th>Fare (₱)</th><th>Pattern</th></tr>
+                <tr><td>1-4 km</td><td>₱13.00</td><td>Base fare</td></tr>
+                <tr><td>5 km</td><td>₱14.50</td><td>+₱1.50</td></tr>
+                <tr><td>6 km</td><td>₱16.00</td><td>+₱1.50</td></tr>
+                <tr><td>7 km</td><td>₱17.50</td><td>+₱1.50</td></tr>
+                <tr><td>8 km</td><td>₱19.00</td><td>+₱1.50</td></tr>
+                <tr><td>10 km</td><td>₱22.00</td><td>+₱1.50/km</td></tr>
+            </table>
+        </div>
+        <div>
+            <div class="highlight-box" style="margin-top:0;">
+                <p style="font-size:24px;"><strong>The Pattern:</strong> Start at ₱13, then add ₱1.50 for every km beyond 4.</p>
+                <p style="font-size:24px;margin-top:12px;"><strong>Formula:</strong> F = 13 + 1.50(d − 4)</p>
+                <p style="font-size:24px;margin-top:12px;"><strong>Question:</strong> How much for 15 km?<br>F = 13 + 1.50(15−4) = 13 + 16.50 = <strong>₱29.50</strong></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 17: Section Divider - Decisions -->
+<section class="slide section-divider">
+    <span class="section-num reveal d1">04</span>
+    <h1 class="reveal d2">Patterns for<br>Decisions</h1>
+    <p style="font-size:28px;color:rgba(255,255,255,0.7);margin-top:16px" class="reveal d3">Using math to make better choices</p>
+</section>
+
+<!-- SLIDE 18: Decision Making with Patterns -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Application</span>
+    <h2 class="reveal d2">Patterns Help Us Decide</h2>
+    <div class="two-col-layout reveal d3">
+        <div>
+            <p style="font-size:26px;margin-bottom:20px;"><strong>Scenario:</strong> You want to buy a ₱3,000 pair of shoes. You can save two ways:</p>
+            <div class="example-box">
+                <div class="label">Plan A: Fixed ₱200/week</div>
+                <p style="font-size:22px;">Week 1: ₱200 | Week 2: ₱400 | Week 3: ₱600...<br>Pattern: 200n (arithmetic)<br><strong>Reach ₱3,000 in 15 weeks</strong></p>
+            </div>
+            <div class="example-box">
+                <div class="label">Plan B: Start ₱50, double each week</div>
+                <p style="font-size:22px;">Week 1: ₱50 | Week 2: ₱100 | Week 3: ₱200...<br>Pattern: 50 × 2^(n-1) (geometric)<br><strong>Reach ₱3,000+ by week 6!</strong></p>
+            </div>
+        </div>
+        <div>
+            <div class="card" style="background:color-mix(in srgb,var(--green) 6%,transparent);border-color:var(--green);">
+                <h3 style="color:var(--green);">Key Insight</h3>
+                <p style="font-size:22px;">Geometric growth is <strong>much faster</strong> than arithmetic growth. This is why compound interest is so powerful!</p>
+                <p style="font-size:22px;margin-top:12px;">But Plan B requires ₱50+100+200+400+800+1600 = ₱3,150 saved (much more total money!)</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 19: Comparing Offers -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Critical Thinking</span>
+    <h2 class="reveal d2">Using Patterns to Compare</h2>
+    <div class="card-grid two-col reveal d3">
+        <div class="card" style="border-color:var(--blue);">
+            <h3 style="color:var(--blue);">📱 Phone Plan A</h3>
+            <p style="font-size:22px;"><strong>₱299/month</strong>, 8GB data</p>
+            <table style="font-size:18px;margin-top:8px;">
+                <tr><td>Month 1</td><td>₱299</td></tr>
+                <tr><td>Month 2</td><td>₱598</td></tr>
+                <tr><td>Month 6</td><td>₱1,794</td></tr>
+                <tr><td>Month 12</td><td>₱3,588</td></tr>
+            </table>
+            <p style="font-size:18px;color:#666;margin-top:8px;">Pattern: 299n (linear)</p>
+        </div>
+        <div class="card" style="border-color:var(--accent);">
+            <h3 style="color:var(--accent);">📱 Phone Plan B</h3>
+            <p style="font-size:22px;"><strong>₱199/month</strong>, 5GB + ₱15/extra GB</p>
+            <table style="font-size:18px;margin-top:8px;">
+                <tr><td>If you use 5GB</td><td>₱199</td></tr>
+                <tr><td>If you use 8GB</td><td>₱244</td></tr>
+                <tr><td>If you use 10GB</td><td>₱274</td></tr>
+                <tr><td>If you use 15GB</td><td>₱349</td></tr>
+            </table>
+            <p style="font-size:18px;color:#666;margin-top:8px;">Pattern: 199 + 15(g−5) if g>5</p>
+        </div>
+    </div>
+    <div class="highlight-box reveal d4">
+        <p style="font-size:22px;"><strong>Which is better?</strong> Depends on your data usage pattern! If you use ≤8GB, Plan B is cheaper. If you always use 8GB+, Plan A gives certainty.</p>
+    </div>
+</section>
+
+<!-- SLIDE 20: Visual Patterns -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Beyond Numbers</span>
+    <h2 class="reveal d2">Visual & Shape Patterns</h2>
+    <div class="two-col-layout reveal d3">
+        <div>
+            <p style="font-size:26px;margin-bottom:20px;">Patterns aren't just numbers. We find them in <strong>shapes, arrangements, and visual designs</strong>.</p>
+            <div class="example-box" style="height:310px;display:flex;flex-direction:column;justify-content:center;">
+                <div class="label">Dot Pattern</div>
+                <div style="display:grid;grid-template-columns:repeat(4,34px);gap:16px;justify-content:center;margin:10px 0 18px;">
+                    <span></span><span></span><span></span><span style="font-size:28px;color:#555;text-align:center;">●</span>
+                    <span></span><span></span><span style="font-size:28px;color:#555;text-align:center;">●</span><span style="font-size:28px;color:#555;text-align:center;">●</span>
+                    <span></span><span style="font-size:28px;color:#555;text-align:center;">●</span><span style="font-size:28px;color:#555;text-align:center;">●</span><span style="font-size:28px;color:#555;text-align:center;">●</span>
+                    <span style="font-size:28px;color:#555;text-align:center;">●</span><span style="font-size:28px;color:#555;text-align:center;">●</span><span style="font-size:28px;color:#555;text-align:center;">●</span><span style="font-size:28px;color:#555;text-align:center;">●</span>
+                </div>
+                <p style="font-size:20px;text-align:center;color:#666;">Triangular numbers: 1, 3, 6, 10, 15...</p>
+            </div>
+        </div>
+        <div class="image-container" style="height:350px;background:linear-gradient(135deg,#fff 0%,#f5f5f5 100%);display:flex;align-items:center;justify-content:center;padding:24px;">
+            <svg viewBox="0 0 720 360" role="img" aria-label="Geometric patterns in tiles and design" style="width:100%;height:100%;display:block;">
+                <defs>
+                    <pattern id="tilePattern" width="120" height="120" patternUnits="userSpaceOnUse">
+                        <rect width="120" height="120" fill="#ffffff"/>
+                        <path d="M0 0H120V120H0Z" fill="none" stroke="#d9d9d9" stroke-width="2"/>
+                        <path d="M60 0L120 60L60 120L0 60Z" fill="#FFE0D6" stroke="#FF5722" stroke-width="3"/>
+                        <circle cx="60" cy="60" r="20" fill="#FF5722" opacity="0.9"/>
+                        <path d="M0 0L60 60L0 120M120 0L60 60L120 120" fill="none" stroke="#1a1a1a" stroke-width="2" opacity="0.35"/>
+                    </pattern>
+                </defs>
+                <rect x="10" y="10" width="700" height="340" rx="18" fill="url(#tilePattern)"/>
+                <rect x="10" y="10" width="700" height="340" rx="18" fill="none" stroke="#e0e0e0" stroke-width="3"/>
+                <text x="360" y="318" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="24" fill="#555">repetition • symmetry • arrangement</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 21: Calendar Patterns -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Everyday Example</span>
+    <h2 class="reveal d2">Patterns in Calendars</h2>
+    <div class="two-col-layout reveal d3">
+        <div>
+            <table style="font-size:20px;text-align:center;">
+                <tr><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>
+                <tr><td></td><td style="background:color-mix(in srgb,var(--accent) 15%,transparent);font-weight:700;">1</td><td>2</td><td style="background:color-mix(in srgb,var(--accent) 15%,transparent);font-weight:700;">3</td><td>4</td><td>5</td><td>6</td></tr>
+                <tr><td>7</td><td style="background:color-mix(in srgb,var(--accent) 15%,transparent);font-weight:700;">8</td><td>9</td><td style="background:color-mix(in srgb,var(--accent) 15%,transparent);font-weight:700;">10</td><td>11</td><td>12</td><td>13</td></tr>
+                <tr><td>14</td><td style="background:color-mix(in srgb,var(--accent) 15%,transparent);font-weight:700;">15</td><td>16</td><td style="background:color-mix(in srgb,var(--accent) 15%,transparent);font-weight:700;">17</td><td>18</td><td>19</td><td>20</td></tr>
+                <tr><td>21</td><td style="background:color-mix(in srgb,var(--accent) 15%,transparent);font-weight:700;">22</td><td>23</td><td style="background:color-mix(in srgb,var(--accent) 15%,transparent);font-weight:700;">24</td><td>25</td><td>26</td><td>27</td></tr>
+            </table>
+            <p style="font-size:22px;margin-top:16px;color:#666;">TTH class pattern: days differ by +2, +5, +2, +5...</p>
+        </div>
+        <div>
+            <div class="card">
+                <h3>Patterns You Can Find:</h3>
+                <p style="font-size:22px;">• Columns: every 7 days (+7 pattern)<br>• Diagonals: +8 or +6 patterns<br>• Same weekday = arithmetic sequence with d=7<br>• Your class schedule is a <strong>repeating pattern</strong></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 22: Sales Records Pattern -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Business Context</span>
+    <h2 class="reveal d2">Patterns in Sales Data</h2>
+    <div class="two-col-layout reveal d3">
+        <div>
+            <table>
+                <tr><th>Month</th><th>Sales (₱)</th><th>Change</th></tr>
+                <tr><td>January</td><td>₱50,000</td><td>—</td></tr>
+                <tr><td>February</td><td>₱55,000</td><td>+₱5,000</td></tr>
+                <tr><td>March</td><td>₱60,000</td><td>+₱5,000</td></tr>
+                <tr><td>April</td><td>₱65,000</td><td>+₱5,000</td></tr>
+                <tr><td>May</td><td>₱70,000</td><td>+₱5,000</td></tr>
+                <tr><td>June</td><td style="color:var(--accent);font-weight:700;">?</td><td>+₱5,000</td></tr>
+            </table>
+        </div>
+        <div>
+            <div class="highlight-box" style="margin-top:0;">
+                <p style="font-size:22px;"><strong>Pattern:</strong> Arithmetic sequence<br><strong>Common difference:</strong> +₱5,000/month<br><strong>Prediction for June:</strong> ₱75,000</p>
+                <p style="font-size:22px;margin-top:12px;"><strong>Formula:</strong> Sales = 50,000 + 5,000(n−1)<br>where n = month number</p>
+            </div>
+            <p style="font-size:20px;color:#666;margin-top:12px;">⚠️ Caveat: Patterns in business don't always continue perfectly. External factors matter!</p>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 23: Section Divider - Activity -->
+<section class="slide image-divider" style="padding:0;">
+    <div class="image-full">
+        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1920&q=80" alt="Students working on activity" />
+    </div>
+    <div class="image-overlay-content" style="display:flex;flex-direction:column;justify-content:flex-end;height:100%;padding:80px;">
+        <span style="font-family:var(--font-display);font-size:180px;opacity:0.15;color:white;position:absolute;top:40px;right:80px;" class="reveal d1">05</span>
+        <h1 style="font-size:88px;color:white;font-family:var(--font-display);" class="reveal d2">Pattern<br>Activity</h1>
+    </div>
+</section>
+
+<!-- SLIDE 24: Activity Instructions -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Pair Activity (15 minutes)</span>
+    <h2 class="reveal d2">Pattern Spotting Challenge</h2>
+    <div class="highlight-box reveal d3">
+        <p style="font-size:26px;"><strong>Instructions:</strong> With your seatmate, identify and explain <strong>3 patterns</strong> using words, numbers, AND symbols.</p>
+    </div>
+    <div class="card-grid reveal d4" style="margin-top:24px;">
+        <div class="card">
+            <h3>Pattern 1</h3>
+            <p>Find a NUMBER pattern (e.g., your savings, fare, scores)</p>
+            <p style="margin-top:8px;font-size:18px;color:var(--accent);font-weight:600;">Write: words + numbers + formula</p>
+        </div>
+        <div class="card">
+            <h3>Pattern 2</h3>
+            <p>Find a SCHEDULE/TIME pattern (e.g., class, meals, routine)</p>
+            <p style="margin-top:8px;font-size:18px;color:var(--accent);font-weight:600;">Write: words + table + prediction</p>
+        </div>
+        <div class="card">
+            <h3>Pattern 3</h3>
+            <p>Find a VISUAL pattern (e.g., tiles, design, arrangement)</p>
+            <p style="margin-top:8px;font-size:18px;color:var(--accent);font-weight:600;">Draw + describe + extend</p>
+        </div>
+    </div>
+    <p class="reveal d5" style="font-size:22px;margin-top:20px;color:#666;">📄 Use 1 whole sheet of paper. Names of both partners at the top. Submit at end of class.</p>
+</section>
+
+<!-- SLIDE 25: Sharing Time -->
+<section class="slide content-slide" style="align-items:center;text-align:center;">
+    <h2 class="reveal d1" style="font-size:60px;">🎤 Sharing Time!</h2>
+    <p class="reveal d2" style="font-size:30px;max-width:800px;margin:20px auto;">Let's hear from 3-4 pairs. Share one of your patterns with the class.</p>
+    <div class="card reveal d3" style="max-width:700px;margin:30px auto;padding:40px;">
+        <h3>When presenting, explain:</h3>
+        <p style="font-size:24px;text-align:left;">1. What is the pattern? (words)<br>2. What are the numbers/data? (numbers/table)<br>3. How would you write it mathematically? (symbols/formula)<br>4. What can you predict from this pattern?</p>
+    </div>
+</section>
+
+<!-- SLIDE 26: Homework Sharing -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">From Last Session</span>
+    <h2 class="reveal d2">Your Pattern Observations</h2>
+    <p class="reveal d3" style="font-size:28px;margin-bottom:24px;">Last session, I asked you to observe 3 patterns in your daily life. Let's hear some!</p>
+    <div class="card-grid reveal d4">
+        <div class="card" style="text-align:center;background:color-mix(in srgb,var(--accent) 5%,transparent);">
+            <p style="font-size:36px;">🏠</p>
+            <h3>At Home</h3>
+            <p>What patterns did you notice in your morning routine?</p>
+        </div>
+        <div class="card" style="text-align:center;background:color-mix(in srgb,var(--blue) 5%,transparent);">
+            <p style="font-size:36px;">🚶</p>
+            <h3>On the Way</h3>
+            <p>Patterns in traffic, jeepneys, store schedules?</p>
+        </div>
+        <div class="card" style="text-align:center;background:color-mix(in srgb,var(--green) 5%,transparent);">
+            <p style="font-size:36px;">📱</p>
+            <h3>Online/Digital</h3>
+            <p>Patterns in notifications, data usage, posts?</p>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 27: Key Vocabulary Summary -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Vocabulary</span>
+    <h2 class="reveal d2">Key Terms Today</h2>
+    <table class="reveal d3">
+        <tr><th>Term</th><th>Definition</th></tr>
+        <tr><td><strong>Pattern</strong></td><td>Any regularity that can be recognized, described, and predicted</td></tr>
+        <tr><td><strong>Variable</strong></td><td>A symbol representing a quantity that can change (x, y, n)</td></tr>
+        <tr><td><strong>Expression</strong></td><td>A combination of numbers, variables, and operations (no = sign)</td></tr>
+        <tr><td><strong>Equation</strong></td><td>A statement that two expressions are equal (has = sign)</td></tr>
+        <tr><td><strong>Relationship</strong></td><td>How one quantity depends on or connects to another</td></tr>
+        <tr><td><strong>Representation</strong></td><td>A way of showing a pattern: words, table, formula, or graph</td></tr>
+    </table>
+</section>
+
+<!-- SLIDE 28: Key Takeaways -->
+<section class="slide content-slide">
+    <div class="shape-circle shape-2"></div>
+    <span class="eyebrow reveal d1">Summary</span>
+    <h2 class="reveal d2">Today's Key Takeaways</h2>
+    <ul class="reveal d3">
+        <li class="step">Patterns are <strong>regularities</strong> we can recognize and predict</li>
+        <li class="step">Math uses <strong>symbols</strong> to communicate ideas precisely and universally</li>
+        <li class="step"><strong>Variables</strong> represent changing quantities in real situations</li>
+        <li class="step">Relationships can be shown in <strong>4 ways</strong>: words, formula, table, graph</li>
+        <li class="step">Patterns help us make <strong>better decisions</strong> (budgeting, comparing, predicting)</li>
+    </ul>
+</section>
+
+<!-- SLIDE 29: Next Session -->
+<section class="slide content-slide">
+    <span class="eyebrow reveal d1">Coming Up</span>
+    <h2 class="reveal d2">Next: Week 2</h2>
+    <div class="two-col-layout reveal d3">
+        <div>
+            <div class="card" style="padding:36px;">
+                <h3 style="color:var(--accent);font-size:24px;">Session 1</h3>
+                <p style="font-size:26px;font-weight:600;">Recognizing Patterns & Sequences in Real Life</p>
+                <p style="font-size:22px;color:#666;margin-top:8px;">Finite vs infinite, classifying patterns, sequence notation</p>
+            </div>
+            <div class="card" style="padding:36px;margin-top:16px;">
+                <h3 style="color:var(--accent);font-size:24px;">Session 2</h3>
+                <p style="font-size:26px;font-weight:600;">Arithmetic, Geometric & Fibonacci Sequences</p>
+                <p style="font-size:22px;color:#666;margin-top:8px;">Formulas, nth term, growth comparison</p>
+            </div>
+        </div>
+        <div>
+            <div class="highlight-box" style="margin-top:0;">
+                <p style="font-size:22px;">📝 <strong>Prepare:</strong> Review your activity sheet. Look at price tags, schedules, or receipts this week and try to spot arithmetic (+) and geometric (×) patterns.</p>
+            </div>
+            <div class="card" style="margin-top:16px;background:color-mix(in srgb,var(--blue) 6%,transparent);border-color:var(--blue);">
+                <p style="font-size:22px;"><strong>📋 Week 1 Quiz</strong> will be given at the start of next session. Study today's vocabulary and pattern types!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 30: Closing -->
+<section class="slide title-slide">
+    <div class="image-full">
+        <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?w=1920&q=80" alt="Math chalkboard" />
+    </div>
+    <div class="image-overlay-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+        <h1 class="reveal-scale d1" style="font-size:72px;color:white;">See You Next Week!</h1>
+        <div class="accent-bar reveal d2"></div>
+        <p class="subtitle reveal d3" style="font-size:28px;">Keep your math eyes open. Patterns are everywhere.</p>
+        <p class="subtitle reveal d4" style="font-size:20px;margin-top:30px;opacity:0.5;">CGE 103 | Week 1 Session 2 | BSAIS-F1</p>
+    </div>
+</section>
+
+</body>
+</html>
