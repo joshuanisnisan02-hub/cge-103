@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CGE103 – Mathematics in the Modern World</title>
+  <style>
+    :root{--navy:#10233f;--blue:#2563eb;--sky:#eaf3ff;--gold:#f59e0b;--ink:#172033;--muted:#667085;--line:#d9e2ef}
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:#f5f8fc}
+    header{background:linear-gradient(135deg,#0c1d35,#193d69);color:#fff;padding:52px 20px 70px}
+    .wrap{width:min(1120px,calc(100% - 32px));margin:auto}.eyebrow{font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#a9c9ff;font-size:.78rem}
+    h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.05;margin:12px 0}.lead{max-width:760px;color:#dbe9ff;font-size:1.05rem;line-height:1.65}
+    .progress-box{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;margin-top:-34px;box-shadow:0 12px 30px #10233f18}
+    .progress-row{display:flex;justify-content:space-between;gap:12px;font-weight:800}.bar{height:11px;background:#e9eef6;border-radius:99px;overflow:hidden;margin-top:12px}
+    .bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),#56a8ff);transition:.3s}
+    main{padding:30px 0 60px}.notice{background:#fff8e8;border:1px solid #f7d88d;border-radius:14px;padding:14px 16px;margin-bottom:22px;color:#72510a}
+    .weeks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}.week{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 5px 18px #10233f0b}
+    .week.locked{background:#f2f4f7;color:#7b8494}.week-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+    .week h2{font-size:1.12rem;margin:0}.badge{font-size:.73rem;font-weight:800;border-radius:99px;padding:6px 9px;background:var(--sky);color:#1853a4}.locked .badge{background:#e1e5eb;color:#667085}
+    .lesson{display:block;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px;text-decoration:none;color:inherit;background:#fff}.lesson:hover{border-color:#7eabef;transform:translateY(-1px)}
+    .lesson strong{display:block;font-size:.94rem}.lesson small{display:block;color:var(--muted);margin-top:4px}.lesson.missing{background:#f7f7f8;border-style:dashed;color:#7b8494;pointer-events:none}
+    .locked .lesson{pointer-events:none;opacity:.62}.complete{width:100%;border:0;border-radius:10px;margin-top:10px;padding:10px;font-weight:800;background:#e8f0ff;color:#174f9f;cursor:pointer}
+    .complete.done{background:#dcfce7;color:#166534}.locked .complete{display:none}.reset{display:block;margin:22px auto 0;border:0;background:transparent;color:var(--muted);text-decoration:underline;cursor:pointer}
+    footer{text-align:center;color:var(--muted);padding:24px}@media(max-width:560px){header{padding-top:36px}.wrap{width:min(100% - 22px,1120px)}}
+  </style>
+</head>
+<body>
+  <header><div class="wrap">
+    <div class="eyebrow">CGE103</div>
+    <h1>Mathematics in the Modern World</h1>
+    <p class="lead">Explore patterns, logic, problem solving, financial mathematics, data literacy, probability, functions, geometry, and networks—one week at a time.</p>
+  </div></header>
+  <div class="wrap progress-box"><div class="progress-row"><span>Your learning progress</span><span id="progressText">0%</span></div><div class="bar"><span id="progressBar"></span></div></div>
+  <main class="wrap">
+    <div class="notice">Complete the available lesson materials in each week to unlock the next week. Progress is saved on this browser.</div>
+    <section class="weeks" id="weeks"></section>
+    <button class="reset" id="reset">Reset my progress</button>
+  </main>
+  <footer>CGE103 · Mathematics in the Modern World</footer>
+  <script>
+    const weeks=[
+      {w:1,l:[["Session 1","Course Introduction",null],["Session 2","Patterns and Mathematical Language","CGE103_Week1_Session2_Patterns_Language_FIXED.html"]]},
+      {w:2,l:[["Session 1","Recognizing Patterns","CGE103_Week2_Session1_Recognizing_Patterns.html"],["Session 2","Sequences and Fibonacci","CGE103_Week2_Session2_Sequences_Fibonacci.html"]]},
+      {w:3,l:[["Session 1","Visual Patterns and Symmetry","CGE103_Week3_Session1_Visual_Patterns_Symmetry.html"],["Session 2","Fractals in Nature","CGE103_Week3_Session2_Fractals_Nature.html"]]},
+      {w:4,l:[["Session 1","Problem Solving","CGE103_Week4_Session1_Problem_Solving.html"],["Session 2","Performance Task","CGE103_Week4_Session2_Performance_Task.html"]]},
+      {w:5,l:[["Session 1","Logic and Propositions","CGE103_Week5_Session1_Logic_Propositions.html"],["Session 2","Truth Tables","CGE103_Week5_Session2_Truth_Tables.html"]]},
+      {w:6,l:[["Session 1","Conditional Statements","CGE103_Week6_Session1_Conditional_Statements.html"],["Session 2","Fallacies and Claims","CGE103_Week6_Session2_Fallacies_Claims.html"]]},
+      {w:7,l:[["Session 1","Sets and Operations","CGE103_Week7_Session1_Sets_Operations.html"],["Session 2","Venn Diagrams","CGE103_Week7_Session2_Venn_Diagrams.html"]]},
+      {w:8,l:[["Session 1","Counting and Decision Trees","CGE103_Week8_Session1_Counting_Decision_Trees.html"],["Session 2","Integration Workshop","CGE103_Week8_Session2_Integration_Workshop.html"]]},
+      {w:9,l:[["Sessions 1–2","Midterm Week",null]]},
+      {w:10,l:[["Session 1","Percentages and Ratios","CGE103_Week10_Session1_Percentages_Ratios.html"],["Session 2","Discounts and Taxes","CGE103_Week10_Session2_Discounts_Taxes.html"]]},
+      {w:11,l:[["Sessions 1–2","Pricing and Interest","CGE103_Week11_Sessions_Pricing_Interest.html"]]},
+      {w:12,l:[["Sessions 1–2","Budgeting and Performance","CGE103_Week12_Sessions_Budgeting_Performance.html"]]},
+      {w:13,l:[["Session 1","Data Literacy","CGE103_Week13_Session1_Data_Literacy.html"],["Session 2","Graphs and Quiz","CGE103_Week13_Session2_Graphs_and_Quiz.html"]]},
+      {w:14,l:[["Sessions 1–2","Central Tendency and Statistics","CGE103_Week14_Sessions_Central_Tendency_Stats.html"]]},
+      {w:15,l:[["Sessions 1–2","Probability and Claims","CGE103_Week15_Sessions_Probability_Claims.html"]]},
+      {w:16,l:[["Sessions 1–2","Functions and Models","CGE103_Week16_Sessions_Functions_Models.html"]]},
+      {w:17,l:[["Sessions 1–2","Geometry and Networks","CGE103_Week17_Sessions_Geometry_Networks.html"]]}
+    ];
+    const key="cge103-completed-weeks";
+    let done=new Set(JSON.parse(localStorage.getItem(key)||"[]"));
+    function unlocked(i){return i===0||done.has(i)}
+    function render(){
+      const root=document.getElementById("weeks");root.innerHTML="";
+      weeks.forEach((week,i)=>{
+        const open=unlocked(i),complete=done.has(week.w);
+        const card=document.createElement("article");card.className="week"+(open?"":" locked");
+        card.innerHTML=`<div class="week-head"><h2>Week ${week.w}</h2><span class="badge">${open?(complete?"Completed":"Unlocked"):"🔒 Locked"}</span></div>`+
+          week.l.map(x=>x[2]?`<a class="lesson" href="${x[2]}" target="_blank" rel="noopener"><strong>${x[0]} · ${x[1]}</strong><small>Open presentation ↗</small></a>`:`<div class="lesson missing"><strong>${x[0]} · ${x[1]}</strong><small>Material not included in the current package</small></div>`).join("")+
+          `<button class="complete ${complete?"done":""}" data-week="${week.w}">${complete?"✓ Week completed":"Mark week as completed"}</button>`;
+        root.appendChild(card);
+      });
+      document.querySelectorAll(".complete").forEach(b=>b.onclick=()=>{const w=+b.dataset.week;done.has(w)?done.delete(w):done.add(w);localStorage.setItem(key,JSON.stringify([...done]));render()});
+      const pct=Math.round(done.size/weeks.length*100);document.getElementById("progressText").textContent=pct+"%";document.getElementById("progressBar").style.width=pct+"%";
+    }
+    document.getElementById("reset").onclick=()=>{if(confirm("Reset all saved CGE103 progress on this browser?")){done.clear();localStorage.removeItem(key);render()}};
+    render();
+  </script>
+</body>
+</html>
