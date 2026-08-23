@@ -1083,7 +1083,7 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
         .title-slide h1{font-size:76px;line-height:1.05;color:#fff;margin-bottom:20px;position:relative}
         .content-slide h2{font-size:50px;line-height:1.1;margin-bottom:32px}
         .content-slide p{font-size:27px;line-height:1.5;color:color-mix(in srgb,var(--foreground) 75%,transparent);max-width:1200px}
-        .image-full{position:absolute;inset:0;z-index:0}.image-full img{width:100%;height:100%;object-fit:cover}
+        .image-full{position:absolute;inset:0;z-index:0}.image-full img,.image-full svg{width:100%;height:100%;object-fit:cover;display:block}
         .image-full::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,26,26,0.87),rgba(26,26,26,0.4))}
         .image-overlay-content{position:relative;z-index:1}
         .image-container{border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.12)}
@@ -1108,7 +1108,7 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
 
 <!-- SLIDE 1: Title -->
 <section class="slide title-slide">
-    <div class="image-full"><img src="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?w=1920&q=80" alt="Geometric patterns and tiles" /></div>
+    <div class="image-full"><svg viewBox="0 0 1920 1080" role="img" aria-label="Repeating geometric tessellation"><defs><pattern id="p0" width="180" height="156" patternUnits="userSpaceOnUse"><polygon points="90,4 176,52 176,104 90,152 4,104 4,52" fill="none" stroke="#FF5722" stroke-width="8"/><path d="M90 4V152M4 52L176 104M176 52L4 104" stroke="#fff" stroke-opacity=".55" stroke-width="4"/></pattern></defs><rect width="1920" height="1080" fill="#1a1a1a"/><rect width="1920" height="1080" fill="url(#p0)"/></svg></div>
     <div class="image-overlay-content" style="text-align:center;">
         <span style="font-size:22px;color:var(--accent);font-weight:700" class="reveal d1">CGE 103 • WEEK 3, SESSION 1</span>
         <div style="width:120px;height:6px;background:var(--accent);margin:24px auto;border-radius:3px" class="reveal d2"></div>
@@ -1143,7 +1143,7 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
             </div>
         </div>
         <div class="image-container" style="height:350px;">
-            <img src="https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=600&q=80" alt="Butterfly showing perfect bilateral symmetry" class="slide-image" />
+            <svg class="slide-image" viewBox="0 0 600 400" role="img" aria-label="Butterfly with mirrored wings across a vertical axis"><rect width="600" height="400" rx="20" fill="#fff4ef"/><line x1="300" y1="20" x2="300" y2="375" stroke="#222" stroke-width="4" stroke-dasharray="10 8"/><g fill="#FF5722" stroke="#c33c12" stroke-width="5"><path d="M285 175C210 45 55 55 95 205C115 280 205 260 285 220Z"/><path d="M285 225C215 230 120 285 165 350C210 385 270 300 285 245Z"/><path d="M315 175C390 45 545 55 505 205C485 280 395 260 315 220Z"/><path d="M315 225C385 230 480 285 435 350C390 385 330 300 315 245Z"/></g><ellipse cx="300" cy="215" rx="18" ry="105" fill="#222"/><circle cx="300" cy="100" r="24" fill="#222"/><circle cx="190" cy="155" r="24" fill="#fff"/><circle cx="410" cy="155" r="24" fill="#fff"/></svg>
         </div>
     </div>
 </section>
@@ -1219,17 +1219,17 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
     <h2 class="reveal d2">Symmetry in Architecture</h2>
     <div class="card-grid reveal d3">
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&q=75" alt="Symmetric building facade" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 140" role="img" aria-label="Building facade with matching left and right halves"><rect width="400" height="140" rx="12" fill="#fff4ef"/><path d="M70 120V42L200 12L330 42V120Z" fill="#ffd5c7" stroke="#c33c12" stroke-width="3"/><line x1="200" y1="8" x2="200" y2="128" stroke="#222" stroke-width="2" stroke-dasharray="6 5"/><g fill="#FF5722"><rect x="95" y="55" width="38" height="35"/><rect x="150" y="55" width="30" height="35"/><rect x="220" y="55" width="30" height="35"/><rect x="267" y="55" width="38" height="35"/><rect x="177" y="94" width="46" height="26"/></g></svg>
             <h3>Building Facades</h3>
             <p>Line symmetry creates balance and visual appeal</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1504439468489-c8920d796a29?w=400&q=75" alt="Church dome rotational symmetry" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 140" role="img" aria-label="Top view of a dome with eight-fold rotational symmetry"><rect width="400" height="140" rx="12" fill="#fff4ef"/><circle cx="200" cy="70" r="55" fill="#ffd5c7" stroke="#c33c12" stroke-width="4"/><g stroke="#FF5722" stroke-width="5"><line x1="200" y1="70" x2="200" y2="18" transform="rotate(0 200 70)"/><line x1="200" y1="70" x2="200" y2="18" transform="rotate(45 200 70)"/><line x1="200" y1="70" x2="200" y2="18" transform="rotate(90 200 70)"/><line x1="200" y1="70" x2="200" y2="18" transform="rotate(135 200 70)"/><line x1="200" y1="70" x2="200" y2="18" transform="rotate(180 200 70)"/><line x1="200" y1="70" x2="200" y2="18" transform="rotate(225 200 70)"/><line x1="200" y1="70" x2="200" y2="18" transform="rotate(270 200 70)"/><line x1="200" y1="70" x2="200" y2="18" transform="rotate(315 200 70)"/></g><circle cx="200" cy="70" r="10" fill="#222"/></svg>
             <h3>Domes & Rotundas</h3>
             <p>Rotational symmetry for structural strength</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=400&q=75" alt="Rice terraces showing pattern" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 140" role="img" aria-label="Repeated stepped contour lines representing rice terraces"><rect width="400" height="140" rx="12" fill="#fff4ef"/><g fill="none" stroke="#FF5722" stroke-width="8" stroke-linejoin="round"><path d="M20 120H380"/><path d="M45 100H120V85H280V100H355"/><path d="M75 75H145V60H255V75H325"/><path d="M110 50H170V35H230V50H290"/></g></svg>
             <h3>Terraces & Steps</h3>
             <p>Translational symmetry in repeated structures</p>
         </div>
@@ -1261,7 +1261,7 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
             <p style="font-size:22px;margin-top:16px;color:#666;"><strong>Only 3 regular polygons tessellate alone:</strong> equilateral triangles, squares, and regular hexagons.</p>
         </div>
         <div class="image-container" style="height:340px;">
-            <img src="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?w=600&q=80" alt="Tessellation floor tiles" class="slide-image" />
+            <svg class="slide-image" viewBox="0 0 600 400" role="img" aria-label="Hexagon tessellation with no gaps or overlaps"><defs><pattern id="p1" width="104" height="90" patternUnits="userSpaceOnUse"><polygon points="26,2 78,2 102,45 78,88 26,88 2,45" fill="#ffd5c7" stroke="#FF5722" stroke-width="4"/><polygon points="78,2 130,2 154,45 130,88 78,88 102,45" fill="#fff4ef" stroke="#FF5722" stroke-width="4"/></pattern></defs><rect width="600" height="400" rx="20" fill="url(#p1)"/></svg>
         </div>
     </div>
 </section>
@@ -1272,32 +1272,32 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
     <h2 class="reveal d2">Tessellations Around You</h2>
     <div class="card-grid reveal d3">
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?w=400&q=75" alt="Floor tiles" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 140" role="img" aria-label="Square tiles repeating in two directions"><defs><pattern id="p2" width="44" height="44" patternUnits="userSpaceOnUse"><rect width="44" height="44" fill="#fff4ef" stroke="#FF5722" stroke-width="4"/><path d="M0 0L44 44M44 0L0 44" stroke="#ffd5c7" stroke-width="3"/></pattern></defs><rect width="400" height="140" rx="12" fill="url(#p2)"/></svg>
             <h3>🏠 Floor Tiles</h3>
             <p>Square tiles = simplest tessellation</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=400&q=75" alt="Honeycomb" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 140" role="img" aria-label="Repeating hexagonal honeycomb tessellation"><defs><pattern id="p3" width="76" height="66" patternUnits="userSpaceOnUse"><polygon points="19,2 57,2 74,33 57,64 19,64 2,33" fill="#ffd5c7" stroke="#FF5722" stroke-width="4"/></pattern></defs><rect width="400" height="140" rx="12" fill="url(#p3)"/></svg>
             <h3>🐝 Honeycomb</h3>
             <p>Hexagonal tessellation (most efficient!)</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?w=400&q=75" alt="Brick wall" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 140" role="img" aria-label="Staggered repeating brick pattern"><defs><pattern id="p4" width="100" height="48" patternUnits="userSpaceOnUse"><rect width="100" height="48" fill="#ffd5c7" stroke="#FF5722" stroke-width="4"/><path d="M50 0V24M0 24H100" stroke="#FF5722" stroke-width="4"/></pattern></defs><rect width="400" height="140" rx="12" fill="url(#p4)"/></svg>
             <h3>🧱 Brick Walls</h3>
             <p>Rectangle tessellation with offset</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=400&q=75" alt="Fabric weaving pattern" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 140" role="img" aria-label="Over-under woven fabric pattern"><rect width="400" height="140" rx="12" fill="#fff4ef"/><g stroke-width="14" fill="none"><g stroke="#FF5722"><path d="M35 10V130"/><path d="M95 10V130"/><path d="M155 10V130"/><path d="M215 10V130"/><path d="M275 10V130"/><path d="M335 10V130"/><path d="M395 10V130"/></g><g stroke="#222" stroke-dasharray="30 30"><path d="M0 35H400"/><path d="M0 95H400" stroke-dashoffset="30"/></g></g></svg>
             <h3>🧵 Fabric Patterns</h3>
             <p>Weaving = interlocking tessellation</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=75" alt="Spreadsheet grid" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 140" role="img" aria-label="Spreadsheet grid with rows, columns, and a highlighted cell"><rect width="400" height="140" rx="12" fill="#fff"/><rect x="35" y="10" width="350" height="120" fill="#fff4ef" stroke="#222" stroke-width="2"/><g stroke="#bbb" stroke-width="2"><path d="M35 35H385M35 60H385M35 85H385M35 110H385"/><path d="M85 10V130M160 10V130M235 10V130M310 10V130"/></g><rect x="160" y="60" width="75" height="25" fill="#ffd5c7" stroke="#FF5722" stroke-width="3"/></svg>
             <h3>📊 Spreadsheets</h3>
             <p>Cells = perfect square tessellation</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=400&q=75" alt="Dashboard UI" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 140" role="img" aria-label="Analytics dashboard with KPI cards, bars, and a trend line"><rect width="400" height="140" rx="12" fill="#fff4ef"/><g fill="#ffd5c7"><rect x="18" y="15" width="95" height="35" rx="6"/><rect x="125" y="15" width="95" height="35" rx="6"/><rect x="232" y="15" width="95" height="35" rx="6"/></g><g fill="#FF5722"><rect x="25" y="95" width="24" height="25"/><rect x="58" y="75" width="24" height="45"/><rect x="91" y="62" width="24" height="58"/><rect x="124" y="85" width="24" height="35"/></g><polyline points="185,112 225,88 265,98 305,67 365,58" fill="none" stroke="#222" stroke-width="5"/></svg>
             <h3>📱 App Grids</h3>
             <p>Phone home screen = tessellation!</p>
         </div>
@@ -1440,7 +1440,7 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
 
 <!-- SLIDE 14: Closing -->
 <section class="slide title-slide">
-    <div class="image-full"><img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1920&q=80" alt="Fractal fern pattern" /></div>
+    <div class="image-full"><svg viewBox="0 0 1920 1080" role="img" aria-label="Self-similar fern fractal with smaller leaflets repeating the whole shape"><rect width="1920" height="1080" fill="#10251c"/><g transform="translate(960 980)" fill="none" stroke="#64d98b" stroke-linecap="round"><path d="M0 0Q-20-310 0-760" stroke-width="28"/><g stroke-width="18"><path d="M-5-120Q-210-180-360-330M5-165Q220-225 360-380M-5-260Q-230-330-420-510M5-315Q245-385 430-570M-5-420Q-220-500-365-660M5-480Q210-555 350-710M-5-585Q-165-640-275-770M5-640Q155-700 260-825"/></g><g stroke-width="10"><path d="M-120-210l-105-5m75-55l-70-60m300 65l110-10m-70-55l75-65M-160-385l-120-20m80-55l-85-75m340 80l125-20m-80-50l90-85"/></g></g></svg></div>
     <div class="image-overlay-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
         <h1 class="reveal-scale d1" style="font-size:64px;color:white;">Next: Fractals, Growth &<br>Patterns in Nature</h1>
         <div style="width:120px;height:6px;background:var(--accent);margin:24px auto;border-radius:3px" class="reveal d2"></div>
