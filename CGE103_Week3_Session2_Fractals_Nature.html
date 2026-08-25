@@ -1083,7 +1083,7 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
         .title-slide h1{font-size:76px;line-height:1.05;color:#fff;position:relative}
         .content-slide h2{font-size:50px;line-height:1.1;margin-bottom:32px}
         .content-slide p{font-size:27px;line-height:1.5;color:color-mix(in srgb,var(--foreground) 75%,transparent);max-width:1200px}
-        .image-full{position:absolute;inset:0;z-index:0}.image-full img{width:100%;height:100%;object-fit:cover}
+        .image-full{position:absolute;inset:0;z-index:0}.image-full img,.image-full svg{width:100%;height:100%;object-fit:cover;display:block}
         .image-full::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,26,26,0.87),rgba(26,26,26,0.35))}
         .image-overlay-content{position:relative;z-index:1}
         .image-container{border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.12)}
@@ -1108,7 +1108,7 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
 
 <!-- SLIDE 1 -->
 <section class="slide title-slide">
-    <div class="image-full"><img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1920&q=80" alt="Fractal fern leaf pattern" /></div>
+    <div class="image-full"><svg viewBox="0 0 1920 1080" role="img" aria-label="Self-similar fern with smaller leaflets repeating the branching structure"><rect width="1920" height="1080" fill="#10251c"/><g transform="translate(960 1000) scale(1.15)" fill="none" stroke="#65d98b" stroke-linecap="round"><path d="M0 0Q-15-300 0-760" stroke-width="25"/><g stroke-width="17"><path d="M-5-100Q-190-150-340-300M5-145Q200-195 345-340M-5-230Q-225-290-405-470M5-285Q230-345 410-525M-5-370Q-210-440-360-610M5-425Q205-490 350-660M-5-515Q-165-570-275-700M5-565Q155-620 260-750"/></g><g stroke-width="9"><path d="M-115-185l-95-5m65-50l-65-55m275 70l95-12m-65-45l70-62M-155-345l-105-18m70-48l-75-66m305 65l110-18m-70-45l80-70M-140-490l-95-20m65-40l-68-65m255 55l95-25m-60-38l70-65"/></g></g></svg></div>
     <div class="image-overlay-content" style="text-align:center;">
         <span style="font-size:22px;color:var(--accent);font-weight:700" class="reveal d1">CGE 103 • WEEK 3, SESSION 2</span>
         <div style="width:120px;height:6px;background:var(--accent);margin:24px auto;border-radius:3px" class="reveal d2"></div>
@@ -1130,7 +1130,7 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
             </div>
         </div>
         <div class="image-container" style="height:340px;">
-            <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=600&q=80" alt="Fern showing fractal self-similarity" class="slide-image" />
+            <svg class="slide-image" viewBox="0 0 600 400" role="img" aria-label="Self-similar fern with smaller leaflets repeating the branching structure"><rect width="600" height="400" rx="20" fill="#10251c"/><g transform="translate(300 375) scale(.42)" fill="none" stroke="#65d98b" stroke-linecap="round"><path d="M0 0Q-15-300 0-760" stroke-width="25"/><g stroke-width="17"><path d="M-5-100Q-190-150-340-300M5-145Q200-195 345-340M-5-230Q-225-290-405-470M5-285Q230-345 410-525M-5-370Q-210-440-360-610M5-425Q205-490 350-660M-5-515Q-165-570-275-700M5-565Q155-620 260-750"/></g><g stroke-width="9"><path d="M-115-185l-95-5m65-50l-65-55m275 70l95-12m-65-45l70-62M-155-345l-105-18m70-48l-75-66m305 65l110-18m-70-45l80-70M-140-490l-95-20m65-40l-68-65m255 55l95-25m-60-38l70-65"/></g></g></svg>
         </div>
     </div>
 </section>
@@ -1141,32 +1141,32 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
     <h2 class="reveal d2">Self-Similarity Everywhere</h2>
     <div class="card-grid reveal d3">
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=400&q=75" alt="Fern leaf" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 150" role="img" aria-label="Fern leaflet pattern repeating at smaller scales"><rect width="400" height="150" rx="12" fill="#fff4ef"/><path d="M200 135Q190 80 200 15" fill="none" stroke="#2E7D32" stroke-width="8"/><g fill="none" stroke="#2E7D32" stroke-width="6"><path d="M198 120Q135 105 95 70M202 110Q265 95 305 60M198 90Q145 75 115 45M202 78Q250 65 285 35M198 58Q160 48 140 25M202 48Q240 38 260 18"/></g></svg>
             <h3>🌿 Fern Leaves</h3>
             <p>Each branch looks like a mini fern. Each leaflet = mini branch.</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=400&q=75" alt="Tree branching" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 150" role="img" aria-label="Binary tree branching from trunk to branches and twigs"><rect width="400" height="150" rx="12" fill="#fff4ef"/><g stroke="#7a4a28" stroke-linecap="round" fill="none"><path d="M200 140V85" stroke-width="14"/><path d="M200 90L135 50M200 90L265 50" stroke-width="10"/><path d="M135 50L100 18M135 50L165 18M265 50L235 18M265 50L300 18" stroke-width="7"/></g><g fill="#2E7D32"><circle cx="100" cy="18" r="10"/><circle cx="165" cy="18" r="10"/><circle cx="235" cy="18" r="10"/><circle cx="300" cy="18" r="10"/></g></svg>
             <h3>🌳 Tree Branching</h3>
             <p>Trunk → branches → smaller branches → twigs. Same pattern at every level.</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400&q=75" alt="Lightning bolt" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 150" role="img" aria-label="Lightning channel splitting into smaller branching paths"><rect width="400" height="150" rx="12" fill="#172033"/><g fill="none" stroke="#ffe45e" stroke-linecap="round"><path d="M200 8L180 45L205 64L175 105L188 142" stroke-width="9"/><path d="M185 42L145 62L125 95M202 65L245 82L270 120M176 103L140 118L122 140" stroke-width="5"/><path d="M145 62L120 52M245 82L282 70" stroke-width="3"/></g></svg>
             <h3>⚡ Lightning</h3>
             <p>Main bolt branches, each branch branches again. Fractal branching.</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=400&q=75" alt="Snowflake" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 150" role="img" aria-label="Six-fold snowflake with repeated branching on every arm"><rect width="400" height="150" rx="12" fill="#fff4ef"/><g transform="translate(200 75)" stroke="#1565C0" stroke-width="6" stroke-linecap="round"><g id="snow-arm"><path d="M0 0V-60"/><path d="M0-28L-16-43M0-28L16-43M0-48L-11-58M0-48L11-58"/></g><use href="#snow-arm" transform="rotate(60)"/><use href="#snow-arm" transform="rotate(120)"/><use href="#snow-arm" transform="rotate(180)"/><use href="#snow-arm" transform="rotate(240)"/><use href="#snow-arm" transform="rotate(300)"/></g></svg>
             <h3>❄️ Snowflakes</h3>
             <p>Six arms, each with sub-branches following the same hexagonal rule.</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=400&q=75" alt="Romanesco broccoli" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 150" role="img" aria-label="Romanesco arrangement of repeating conical buds along a spiral"><rect width="400" height="150" rx="12" fill="#fff4ef"/><g fill="#69b34c" stroke="#2E7D32" stroke-width="3"><path d="M200 18L170 82H230Z"/><path d="M145 38L120 92H170Z"/><path d="M255 38L230 92H280Z"/><path d="M105 72L83 120H127Z"/><path d="M295 72L273 120H317Z"/><path d="M155 88L132 136H178Z"/><path d="M245 88L222 136H268Z"/></g><g fill="#a8df7c"><circle cx="200" cy="45" r="6"/><circle cx="145" cy="62" r="5"/><circle cx="255" cy="62" r="5"/></g></svg>
             <h3>🥦 Romanesco Broccoli</h3>
             <p>Each bud is a miniature version of the whole vegetable. Perfect fractal!</p>
         </div>
         <div class="card" style="text-align:center;">
-            <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&q=75" alt="Mountain coastline" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 150" role="img" aria-label="Jagged coastline retaining irregular detail at smaller scales"><rect width="400" height="150" rx="12" fill="#dff4ff"/><path d="M0 110L45 100L65 82L90 95L112 65L140 82L158 45L180 70L205 58L230 92L260 70L282 105L315 85L340 112L400 96V150H0Z" fill="#2E7D32"/><path d="M0 110L45 100L65 82L90 95L112 65L140 82L158 45L180 70L205 58L230 92L260 70L282 105L315 85L340 112L400 96" fill="none" stroke="#0b5d73" stroke-width="5"/></svg>
             <h3>🏔️ Coastlines</h3>
             <p>Zoom in on a coast: same jagged pattern at every scale.</p>
         </div>
@@ -1207,22 +1207,22 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
     <h2 class="reveal d2">Fractals in Technology</h2>
     <div class="card-grid two-col reveal d3">
         <div class="card">
-            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&q=75" alt="Computer graphics" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 150" role="img" aria-label="Fractal terrain generated through repeated midpoint displacement"><rect width="400" height="150" rx="12" fill="#dff4ff"/><path d="M0 130L45 105L78 112L110 68L145 88L190 35L225 72L255 55L290 92L330 64L400 110V150H0Z" fill="#6d9f55"/><path d="M0 130L45 105L78 112L110 68L145 88L190 35L225 72L255 55L290 92L330 64L400 110" fill="none" stroke="#2E7D32" stroke-width="5"/></svg>
             <h3>🎮 Computer Graphics</h3>
             <p>Mountains, clouds, and landscapes in movies/games are generated using fractal algorithms</p>
         </div>
         <div class="card">
-            <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=75" alt="Phone antenna" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 150" role="img" aria-label="Sierpinski triangle fractal antenna geometry"><rect width="400" height="150" rx="12" fill="#fff4ef"/><g fill="none" stroke="#FF5722" stroke-width="5"><path d="M200 12L90 135H310Z"/><path d="M200 12L145 73H255Z"/><path d="M145 73L90 135H200Z"/><path d="M255 73L200 135H310Z"/></g><line x1="200" y1="135" x2="200" y2="148" stroke="#222" stroke-width="5"/></svg>
             <h3>📡 Cell Phone Antennas</h3>
             <p>Fractal-shaped antennas receive multiple frequencies in a tiny space</p>
         </div>
         <div class="card">
-            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=75" alt="Data compression" class="card-image" />
-            <h3>🗜️ Image Compression</h3>
-            <p>JPEG compression uses fractal-like patterns to reduce file sizes</p>
+            <svg class="card-image" viewBox="0 0 400 150" role="img" aria-label="Self-similar image regions matched and encoded by reusable transformations"><rect width="400" height="150" rx="12" fill="#fff4ef"/><g fill="#ffd5c7" stroke="#FF5722" stroke-width="3"><rect x="22" y="22" width="48" height="48"/><rect x="80" y="22" width="48" height="48"/><rect x="22" y="80" width="48" height="48"/><rect x="80" y="80" width="48" height="48"/></g><path d="M150 75H235" stroke="#222" stroke-width="5"/><path d="M235 75l-14-9v18Z" fill="#222"/><rect x="260" y="35" width="95" height="80" rx="10" fill="#FF5722"/><path d="M285 92l22-35l22 35Z" fill="#fff"/><text x="307" y="132" text-anchor="middle" font-size="13" font-family="Space Grotesk" fill="#555">reusable pattern</text></svg>
+            <h3>🗜️ Fractal Image Compression</h3>
+            <p>Fractal compression matches self-similar image regions; JPEG instead uses the discrete cosine transform (DCT)</p>
         </div>
         <div class="card">
-            <img src="https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?w=400&q=75" alt="Network topology" class="card-image" />
+            <svg class="card-image" viewBox="0 0 400 150" role="img" aria-label="Hierarchical branching network topology"><rect width="400" height="150" rx="12" fill="#fff4ef"/><g stroke="#6A1B9A" stroke-width="4"><path d="M200 25L120 70M200 25L280 70M120 70L70 120M120 70L150 120M280 70L250 120M280 70L330 120"/></g><g fill="#6A1B9A"><circle cx="200" cy="25" r="13"/><circle cx="120" cy="70" r="11"/><circle cx="280" cy="70" r="11"/><circle cx="70" cy="120" r="9"/><circle cx="150" cy="120" r="9"/><circle cx="250" cy="120" r="9"/><circle cx="330" cy="120" r="9"/></g></svg>
             <h3>🌐 Network Design</h3>
             <p>Internet routing, supply chains, and distribution networks follow fractal branching</p>
         </div>
@@ -1329,7 +1329,7 @@ body[data-no-chrome] .artifact-editor-toggle { display: none; }
 
 <!-- SLIDE 11: Closing -->
 <section class="slide title-slide">
-    <div class="image-full"><img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1920&q=80" alt="Galaxy spiral" /></div>
+    <div class="image-full"><svg viewBox="0 0 1920 1080" role="img" aria-label="Logarithmic spiral structure of a stylized galaxy"><rect width="1920" height="1080" fill="#080b1c"/><g transform="translate(960 540)" fill="none" stroke-linecap="round"><path d="M0 0C60-40 145-35 175 35C220 140 85 230-60 190C-270 130-295-145-95-300C170-505 565-295 600 75" stroke="#9ec9ff" stroke-width="34" opacity=".75"/><path d="M0 0C-60 40-145 35-175-35C-220-140-85-230 60-190C270-130 295 145 95 300C-170 505-565 295-600-75" stroke="#d9b5ff" stroke-width="34" opacity=".65"/></g><circle cx="960" cy="540" r="45" fill="#fff3a8"/><g fill="#fff"><circle cx="180" cy="130" r="5"/><circle cx="340" cy="850" r="5"/><circle cx="540" cy="210" r="5"/><circle cx="760" cy="900" r="5"/><circle cx="1250" cy="160" r="5"/><circle cx="1490" cy="760" r="5"/><circle cx="1690" cy="280" r="5"/><circle cx="1550" cy="960" r="5"/><circle cx="1050" cy="85" r="5"/><circle cx="890" cy="980" r="5"/></g></svg></div>
     <div class="image-overlay-content" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
         <h1 class="reveal-scale d1" style="font-size:60px;color:white;">Next Week: Problem-Solving<br>Strategies & Performance Task</h1>
         <div style="width:120px;height:6px;background:var(--accent);margin:24px auto;border-radius:3px" class="reveal d2"></div>
