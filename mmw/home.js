@@ -1,0 +1,2 @@
+const grid=document.querySelector('#week-grid');
+COURSE.weeks.forEach(w=>{const card=document.createElement('article');card.className='week-card';card.innerHTML=`<p class="eyebrow">Week ${w.week}</p><h3>${w.theme}</h3>${w.sessions.map((s,i)=>`<a class="session-link" href="session.html?week=${w.week}&session=${i+1}"><strong>Session ${i+1}: ${s.title}</strong><small>${s.focus}</small></a>`).join('')}`;grid.appendChild(card)});

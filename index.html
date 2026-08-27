@@ -20,6 +20,7 @@
     .lesson{display:block;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:10px;text-decoration:none;color:inherit;background:#fff}.lesson:hover{border-color:#7eabef;transform:translateY(-1px)}
     .lesson strong{display:block;font-size:.94rem}.lesson small{display:block;color:var(--muted);margin-top:4px}.lesson.missing{background:#f7f7f8;border-style:dashed;color:#7b8494;pointer-events:none}
     .locked .lesson{pointer-events:none;opacity:.62}.complete{width:100%;border:0;border-radius:10px;margin-top:10px;padding:10px;font-weight:800;background:#e8f0ff;color:#174f9f;cursor:pointer}
+    .complete-course{display:flex;align-items:center;justify-content:space-between;gap:18px;background:linear-gradient(135deg,#164b39,#226b51);color:#fff;border-radius:18px;padding:22px 24px;margin-bottom:22px;text-decoration:none;box-shadow:0 12px 28px #10233f22}.complete-course strong{display:block;font-size:1.1rem}.complete-course small{display:block;color:#d8ede4;margin-top:5px}.complete-course span{white-space:nowrap;background:#f5b942;color:#13251e;border-radius:99px;padding:10px 14px;font-weight:800}
     .complete.done{background:#dcfce7;color:#166534}.locked .complete{display:none}.reset{display:block;margin:22px auto 0;border:0;background:transparent;color:var(--muted);text-decoration:underline;cursor:pointer}
     footer{text-align:center;color:var(--muted);padding:24px}@media(max-width:560px){header{padding-top:36px}.wrap{width:min(100% - 22px,1120px)}}
   </style>
@@ -33,6 +34,7 @@
   <div class="wrap progress-box"><div class="progress-row"><span>Your learning progress</span><span id="progressText">0%</span></div><div class="bar"><span id="progressBar"></span></div></div>
   <main class="wrap">
     <div class="notice">Complete the available lesson materials in each week to unlock the next week. Progress is saved on this browser.</div>
+    <a class="complete-course" href="mmw/index.html"><div><strong>Open the complete 18-week course package</strong><small>36 sessions · 25+ slides each · 18 quizzes · examinations · TOS · answer rationales</small></div><span>Open course →</span></a>
     <section class="weeks" id="weeks"></section>
     <button class="reset" id="reset">Reset my progress</button>
   </main>
