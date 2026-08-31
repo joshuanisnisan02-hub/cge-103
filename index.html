@@ -29,7 +29,7 @@
   <header><div class="wrap">
     <div class="eyebrow">CGE103</div>
     <h1>Mathematics in the Modern World</h1>
-    <p class="lead">Explore patterns, logic, problem solving, financial mathematics, data literacy, probability, functions, geometry, and networks—one week at a time.</p>
+    <p class="lead">Study the CHED-aligned CGE103 sequence: the nature of mathematics, mathematical language, reasoning, data management, geometric designs, codes, linear programming, finance, voting and apportionment, logic, graph theory, and mathematical systems.</p>
   </div></header>
   <div class="wrap progress-box"><div class="progress-row"><span>Your learning progress</span><span id="progressText">0%</span></div><div class="bar"><span id="progressBar"></span></div></div>
   <main class="wrap">
@@ -41,23 +41,24 @@
   <footer>CGE103 · Mathematics in the Modern World</footer>
   <script>
     const weeks=[
-      {w:1,l:[["Session 1","Course Introduction",null],["Session 2","Patterns and Mathematical Language","CGE103_Week1_Session2_Patterns_Language_FIXED.html"]]},
-      {w:2,l:[["Session 1","Recognizing Patterns","CGE103_Week2_Session1_Recognizing_Patterns.html"],["Session 2","Sequences and Fibonacci","CGE103_Week2_Session2_Sequences_Fibonacci.html"]]},
-      {w:3,l:[["Session 1","Visual Patterns and Symmetry","CGE103_Week3_Session1_Visual_Patterns_Symmetry.html"],["Session 2","Fractals in Nature","CGE103_Week3_Session2_Fractals_Nature.html"]]},
-      {w:4,l:[["Session 1","Problem Solving","CGE103_Week4_Session1_Problem_Solving.html"],["Session 2","Performance Task","CGE103_Week4_Session2_Performance_Task.html"]]},
-      {w:5,l:[["Session 1","Logic and Propositions","CGE103_Week5_Session1_Logic_Propositions.html"],["Session 2","Truth Tables","CGE103_Week5_Session2_Truth_Tables.html"]]},
-      {w:6,l:[["Session 1","Conditional Statements","CGE103_Week6_Session1_Conditional_Statements.html"],["Session 2","Fallacies and Claims","CGE103_Week6_Session2_Fallacies_Claims.html"]]},
-      {w:7,l:[["Session 1","Sets and Operations","CGE103_Week7_Session1_Sets_Operations.html"],["Session 2","Venn Diagrams","CGE103_Week7_Session2_Venn_Diagrams.html"]]},
-      {w:8,l:[["Session 1","Counting and Decision Trees","CGE103_Week8_Session1_Counting_Decision_Trees.html"],["Session 2","Integration Workshop","CGE103_Week8_Session2_Integration_Workshop.html"]]},
-      {w:9,l:[["Sessions 1–2","Midterm Week",null]]},
-      {w:10,l:[["Session 1","Percentages and Ratios","CGE103_Week10_Session1_Percentages_Ratios.html"],["Session 2","Discounts and Taxes","CGE103_Week10_Session2_Discounts_Taxes.html"]]},
-      {w:11,l:[["Sessions 1–2","Pricing and Interest","CGE103_Week11_Sessions_Pricing_Interest.html"]]},
-      {w:12,l:[["Sessions 1–2","Budgeting and Performance","CGE103_Week12_Sessions_Budgeting_Performance.html"]]},
-      {w:13,l:[["Session 1","Data Literacy","CGE103_Week13_Session1_Data_Literacy.html"],["Session 2","Graphs and Quiz","CGE103_Week13_Session2_Graphs_and_Quiz.html"]]},
-      {w:14,l:[["Sessions 1–2","Central Tendency and Statistics","CGE103_Week14_Sessions_Central_Tendency_Stats.html"]]},
-      {w:15,l:[["Sessions 1–2","Probability and Claims","CGE103_Week15_Sessions_Probability_Claims.html"]]},
-      {w:16,l:[["Sessions 1–2","Functions and Models","CGE103_Week16_Sessions_Functions_Models.html"]]},
-      {w:17,l:[["Sessions 1–2","Geometry and Networks","CGE103_Week17_Sessions_Geometry_Networks.html"]]}
+      {w:1,l:[["Session 1","The Nature and Uses of Mathematics","mmw/session.html?week=1&session=1"],["Session 2","Patterns in Nature and the Fibonacci Sequence","mmw/session.html?week=1&session=2"]]},
+      {w:2,l:[["Session 1","Language, Symbols, Sets, and Relations","mmw/session.html?week=2&session=1"],["Session 2","Expressions, Equations, and Mathematical Sentences","mmw/session.html?week=2&session=2"]]},
+      {w:3,l:[["Session 1","Inductive and Deductive Reasoning","mmw/session.html?week=3&session=1"],["Session 2","Polya’s Four-Step Problem-Solving Method","mmw/session.html?week=3&session=2"]]},
+      {w:4,l:[["Session 1","Data, Variables, Sampling, and Bias","mmw/session.html?week=4&session=1"],["Session 2","Frequency Tables and Distributions","mmw/session.html?week=4&session=2"]]},
+      {w:5,l:[["Session 1","Measures of Central Tendency and Position","mmw/session.html?week=5&session=1"],["Session 2","Variation and Honest Graphs","mmw/session.html?week=5&session=2"]]},
+      {w:6,l:[["Session 1","Transformations, Symmetry, and Tessellations","mmw/session.html?week=6&session=1"],["Session 2","Geometry in Philippine Art and Design","mmw/session.html?week=6&session=2"]]},
+      {w:7,l:[["Session 1","Modular Arithmetic and Check Digits","mmw/session.html?week=7&session=1"],["Session 2","Coding Schemes for Data Transmission","mmw/session.html?week=7&session=2"]]},
+      {w:8,l:[["Session 1","Classical Ciphers and Frequency Analysis","mmw/session.html?week=8&session=1"],["Session 2","Public-Key Ideas, Privacy, and Security","mmw/session.html?week=8&session=2"]]},
+      {w:9,l:[["Session 1","Variables, Objectives, and Constraints","mmw/session.html?week=9&session=1"],["Session 2","Graphing Inequalities and Feasible Regions","mmw/session.html?week=9&session=2"]]},
+      {w:10,l:[["Session 1","The Corner-Point Method","mmw/session.html?week=10&session=1"],["Session 2","Evaluating Optimization Models","mmw/session.html?week=10&session=2"]]},
+      {w:11,l:[["Session 1","Simple and Compound Interest","mmw/session.html?week=11&session=1"],["Session 2","Annuities, Loans, and Investments","mmw/session.html?week=11&session=2"]]},
+      {w:12,l:[["Session 1","Preference Ballots and Voting Methods","mmw/session.html?week=12&session=1"],["Session 2","Fairness Criteria and Voting Paradoxes","mmw/session.html?week=12&session=2"]]},
+      {w:13,l:[["Session 1","Hamilton’s Method and the Quota Rule","mmw/session.html?week=13&session=1"],["Session 2","Jefferson, Adams, and Webster Methods","mmw/session.html?week=13&session=2"]]},
+      {w:14,l:[["Session 1","Propositions, Connectives, and Truth Tables","mmw/session.html?week=14&session=1"],["Session 2","Equivalence and Valid Arguments","mmw/session.html?week=14&session=2"]]},
+      {w:15,l:[["Session 1","Graphs, Networks, Euler Paths, and Circuits","mmw/session.html?week=15&session=1"],["Session 2","Hamiltonian Circuits and Traveling-Salesperson Problems","mmw/session.html?week=15&session=2"]]},
+      {w:16,l:[["Session 1","Trees and Minimum Spanning Trees","mmw/session.html?week=16&session=1"],["Session 2","Critical-Path Scheduling","mmw/session.html?week=16&session=2"]]},
+      {w:17,l:[["Session 1","Axioms, Definitions, and Mathematical Systems","mmw/session.html?week=17&session=1"],["Session 2","Modular Systems and Alternative Geometries","mmw/session.html?week=17&session=2"]]},
+      {w:18,l:[["Session 1","Integrated Mathematics in Modern Decisions","mmw/session.html?week=18&session=1"],["Session 2","Capstone Presentation and Course Synthesis","mmw/session.html?week=18&session=2"]]}
     ];
     const key="cge103-completed-weeks";
     let done=new Set(JSON.parse(localStorage.getItem(key)||"[]"));
