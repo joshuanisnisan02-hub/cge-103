@@ -29,7 +29,7 @@
   <header><div class="wrap">
     <div class="eyebrow">CGE103</div>
     <h1>Mathematics in the Modern World</h1>
-    <p class="lead">Study the CHED-aligned CGE103 sequence: the nature of mathematics, mathematical language, reasoning, data management, geometric designs, codes, linear programming, finance, voting and apportionment, logic, graph theory, and mathematical systems.</p>
+    <p class="lead">Study the CHED-guided sequence from the attached Mathematics in the Modern World module: patterns and mathematical language, reasoning and problem solving, modular arithmetic and group theory, data management, logic, and graph theory.</p>
   </div></header>
   <div class="wrap progress-box"><div class="progress-row"><span>Your learning progress</span><span id="progressText">0%</span></div><div class="bar"><span id="progressBar"></span></div></div>
   <main class="wrap">
@@ -39,27 +39,16 @@
     <button class="reset" id="reset">Reset my progress</button>
   </main>
   <footer>CGE103 · Mathematics in the Modern World</footer>
+  <script src="mmw/course-data.js"></script>
   <script>
-    const weeks=[
+    const retainedWeeks=[
       {w:1,l:[["Session 1","Course Introduction","mmw/session.html?week=1&session=1"],["Session 2","Patterns and Mathematical Language","CGE103_Week1_Session2_Patterns_Language_FIXED.html"]]},
       {w:2,l:[["Session 1","Recognizing Patterns","CGE103_Week2_Session1_Recognizing_Patterns.html"],["Session 2","Sequences and Fibonacci","CGE103_Week2_Session2_Sequences_Fibonacci.html"]]},
       {w:3,l:[["Session 1","Visual Patterns and Symmetry","CGE103_Week3_Session1_Visual_Patterns_Symmetry.html"],["Session 2","Fractals in Nature","CGE103_Week3_Session2_Fractals_Nature.html"]]},
-      {w:4,l:[["Session 1","Inductive and Deductive Reasoning","mmw/session.html?week=4&session=1"],["Session 2","Polya’s Four-Step Problem-Solving Method","mmw/session.html?week=4&session=2"]]},
-      {w:5,l:[["Session 1","Data, Sampling, Frequency Tables, and Bias","mmw/session.html?week=5&session=1"],["Session 2","Descriptive Statistics and Honest Graphs","mmw/session.html?week=5&session=2"]]},
-      {w:6,l:[["Session 1","Transformations, Symmetry, and Tessellations","mmw/session.html?week=6&session=1"],["Session 2","Geometry in Philippine Art and Design","mmw/session.html?week=6&session=2"]]},
-      {w:7,l:[["Session 1","Modular Arithmetic and Check Digits","mmw/session.html?week=7&session=1"],["Session 2","Coding Schemes for Data Transmission","mmw/session.html?week=7&session=2"]]},
-      {w:8,l:[["Session 1","Classical Ciphers and Frequency Analysis","mmw/session.html?week=8&session=1"],["Session 2","Public-Key Ideas, Privacy, and Security","mmw/session.html?week=8&session=2"]]},
-      {w:9,l:[["Session 1","Variables, Objectives, and Constraints","mmw/session.html?week=9&session=1"],["Session 2","Graphing Inequalities and Feasible Regions","mmw/session.html?week=9&session=2"]]},
-      {w:10,l:[["Session 1","The Corner-Point Method","mmw/session.html?week=10&session=1"],["Session 2","Evaluating Optimization Models","mmw/session.html?week=10&session=2"]]},
-      {w:11,l:[["Session 1","Simple and Compound Interest","mmw/session.html?week=11&session=1"],["Session 2","Annuities, Loans, and Investments","mmw/session.html?week=11&session=2"]]},
-      {w:12,l:[["Session 1","Preference Ballots and Voting Methods","mmw/session.html?week=12&session=1"],["Session 2","Fairness Criteria and Voting Paradoxes","mmw/session.html?week=12&session=2"]]},
-      {w:13,l:[["Session 1","Hamilton’s Method and the Quota Rule","mmw/session.html?week=13&session=1"],["Session 2","Jefferson, Adams, and Webster Methods","mmw/session.html?week=13&session=2"]]},
-      {w:14,l:[["Session 1","Propositions, Connectives, and Truth Tables","mmw/session.html?week=14&session=1"],["Session 2","Equivalence and Valid Arguments","mmw/session.html?week=14&session=2"]]},
-      {w:15,l:[["Session 1","Graphs, Networks, Euler Paths, and Circuits","mmw/session.html?week=15&session=1"],["Session 2","Hamiltonian Circuits and Traveling-Salesperson Problems","mmw/session.html?week=15&session=2"]]},
-      {w:16,l:[["Session 1","Trees and Minimum Spanning Trees","mmw/session.html?week=16&session=1"],["Session 2","Critical-Path Scheduling","mmw/session.html?week=16&session=2"]]},
-      {w:17,l:[["Session 1","Axioms, Definitions, and Mathematical Systems","mmw/session.html?week=17&session=1"],["Session 2","Modular Systems and Alternative Geometries","mmw/session.html?week=17&session=2"]]},
-      {w:18,l:[["Session 1","Integrated Mathematics in Modern Decisions","mmw/session.html?week=18&session=1"],["Session 2","Capstone Presentation and Course Synthesis","mmw/session.html?week=18&session=2"]]}
+      {w:4,l:[["Session 1","Inductive and Deductive Reasoning","mmw/session.html?week=4&session=1"],["Session 2","Polya’s Four-Step Problem-Solving Method","mmw/session.html?week=4&session=2"]]}
     ];
+    const revisedWeeks=COURSE.weeks.slice(4).map(w=>({w:w.week,l:w.sessions.map((s,i)=>[`Session ${i+1}`,s.title,`mmw/session.html?week=${w.week}&session=${i+1}`])}));
+    const weeks=[...retainedWeeks,...revisedWeeks];
     const key="cge103-completed-weeks";
     let done=new Set(JSON.parse(localStorage.getItem(key)||"[]"));
     function unlocked(i){return i===0||done.has(i)}
