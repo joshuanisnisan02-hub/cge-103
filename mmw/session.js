@@ -207,7 +207,10 @@ teach('18-2',[
 'Ethical disclosure includes assumptions, uncertainty, omitted factors, limitations, and stakeholder effects.',
 'Mathematical citizenship means using quantitative reasoning responsibly in personal, professional, and public decisions.'
 ],'Improve: “Option A is better because it is 20% cheaper.”',['State actual amounts and the comparison base.','Check quality, time, risk, and fees.','Cite the source and period.','Explain why cost receives priority.'],'A defensible claim reports evidence, context, assumptions, criteria, and limitations.','Prepare one recommendation slide with one visual, two calculations, and one limitation.');
-const currentTeaching=T[`${weekNo}-${sessionNo}`];
+// Weeks 5–18 follow the attached CHED-guided module. Their lesson-specific
+// explanations are generated from the revised course data instead of the
+// superseded finance, voting, optimization, and apportionment entries below.
+const currentTeaching=weekNo>=5?null:T[`${weekNo}-${sessionNo}`];
 const conceptExplanation=(idea,i)=>{
  const explanation=currentTeaching?.d?.[i]||`${idea} connects the definition, representation, procedure, and interpretation required in this lesson.`;
  const example=s.examples[i%s.examples.length];
